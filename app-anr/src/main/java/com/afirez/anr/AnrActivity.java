@@ -1,42 +1,47 @@
 package com.afirez.anr;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class DialogActivity extends AppCompatActivity {
+public class AnrActivity extends AppCompatActivity {
+
+    private static final String TAG = "AnrActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dialog);
+        setContentView(R.layout.activity_anr);
         TextView tvDialog = (TextView) findViewById(R.id.tv_dialog);
-        View decorView = getWindow().getDecorView();
         tvDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tip("Activity.runOnUiThread 会直接将数据放入 looper," +
-                        "View.post 会需要 AttachInfo ," +
-                        "这个在 OnCreate 里面还没创建出来，所以真正执行的时候会靠后");
             }
         });
-        final ProgressDialog dialog = provideDialog();
-        dialog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.hide();
-                    }
-                });
+                testAnr();
             }
         }).start();
+        SystemClock.sleep(10);
+        initView();
+    }
+
+    private synchronized void initView() {
+        Log.d(TAG, "initView: ");
+    }
+
+    private void testAnr() {
+        Log.d(TAG, "testAnr: 1");
+        SystemClock.sleep(35 * 1000);
+        Log.d(TAG, "testAnr: 0");
     }
 
     private ProgressDialog mDialog;
@@ -45,7 +50,7 @@ public class DialogActivity extends AppCompatActivity {
         if (mDialog == null) {
             mDialog = new ProgressDialog(this);
 //        dialog.setTitle("test dialog");
-            mDialog.setMessage("runOnUiThread 会直接将数据放入 looper");
+            mDialog.setMessage("testAnr");
             mDialog.setIndeterminate(true);
             mDialog.setCancelable(false);
         }

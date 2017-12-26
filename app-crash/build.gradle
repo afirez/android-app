@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.3"
 
     defaultConfig {
-        applicationId "com.afirez.anr"
+        applicationId "com.afirez.crash"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1

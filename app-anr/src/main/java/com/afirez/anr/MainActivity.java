@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (dialog != null) {
-                dialog.hide();
+                dialog.dismiss();
             }
         }
     };
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                             "View.post 会需要 AttachInfo ," +
                             "这个在 OnCreate 里面还没创建出来，所以真正执行的时候会靠后",
                     Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MainActivity.this, DialogActivity.class);
+            Intent intent = new Intent(MainActivity.this, AnrActivity.class);
             startActivity(intent);
         }
     };
