@@ -1,1 +1,1 @@
-include ':app', ':app-anr', ':app-lottie', ':app-crash'
+include ':app', ':app-anr', ':app-lottie', ':app-crash', ':app-onactivityresult'
