@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.afirez.onactivityresult.ActivityResult;
 import com.afirez.onactivityresult.OnResultHelper;
 import com.afirez.onactivityresult.R;
 
-import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,39 +25,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onCallback(View view) {
-        onResultHelper.startActivityForResult(FetchDataActivity.class, 17,
+        onResultHelper.startActivityForResult(FetchDataActivity.class,
                 new OnResultHelper.Callback() {
                     @Override
                     public void onActivityResult(int requestCode, int resultCode, Intent data) {
                         if (Activity.RESULT_OK == resultCode) {
                             if (data != null) {
                                 String text = data.getStringExtra("text");
-                                Toast.makeText(MainActivity.this, "callback -> " + text, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, requestCode + " callback -> " + text, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, "callback -> canceled", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, requestCode + " callback -> canceled", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    Disposable disposable;
+    private Disposable disposable;
 
     public void onRxJava(View view) {
-        disposable = onResultHelper.startActivityForResult(FetchDataActivity.class, 18)
-                .subscribe(new Consumer<ActivityResult>() {
+        disposable = onResultHelper.startActivityForResult(FetchDataActivity.class)
+                .subscribe(new Consumer<OnResultHelper.Result>() {
                     @Override
-                    public void accept(ActivityResult result) throws Exception {
+                    public void accept(OnResultHelper.Result result) throws Exception {
+                        int requestCode = result.getRequestCode();
                         int resultCode = result.getResultCode();
                         Intent data = result.getData();
-                        int requestCode = result.getRequestCode();
-                        if (Activity.RESULT_OK == resultCode && 18 == requestCode) {
+                        if (Activity.RESULT_OK == resultCode) {
                             if (data != null) {
                                 String text = data.getStringExtra("text");
-                                Toast.makeText(MainActivity.this, "RxJava -> " + text, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, requestCode + " RxJava -> " + text, Toast.LENGTH_SHORT).show();
                             }
-                        } else if (Activity.RESULT_OK != resultCode && 18 == requestCode){
-                            Toast.makeText(MainActivity.this, "RxJava -> canceled", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, requestCode + " RxJava -> canceled", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         if (Activity.RESULT_OK == resultCode && 16 == requestCode) {
             if (data != null) {
                 String text = data.getStringExtra("text");
-                Toast.makeText(this, "normal -> " + text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, requestCode + " normal -> " + text, Toast.LENGTH_SHORT).show();
             }
         }
     }

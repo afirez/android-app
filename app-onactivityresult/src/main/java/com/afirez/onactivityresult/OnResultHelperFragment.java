@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -22,11 +21,6 @@ public class OnResultHelperFragment extends Fragment {
 
     public static final String TAG = "OnResultHelperFragment";
 
-    private volatile Map<Integer, PublishSubject<ActivityResult>> mRxResults;
-
-    // WeakHashMap Instance
-    private volatile Map<Integer, OnResultHelper.Callback> mCallBacks;
-
     public OnResultHelperFragment() {
     }
 
@@ -36,12 +30,15 @@ public class OnResultHelperFragment extends Fragment {
         setRetainInstance(true);
     }
 
+    // WeakHashMap Instance
+    private volatile Map<Integer, PublishSubject<OnResultHelper.Result>> mRxResults;
 
-    public Observable<ActivityResult> startForResult(final Intent intent, final int requestCode) {
-        PublishSubject<ActivityResult> rxResult = PublishSubject.create();
+    public Observable<OnResultHelper.Result> startForResult(final Intent intent) {
+        PublishSubject<OnResultHelper.Result> rxResult = PublishSubject.create();
         if (mRxResults == null) {
-            mRxResults = new HashMap<>();
+            mRxResults = new WeakHashMap<>();
         }
+        final int requestCode = getRequestCode();
         mRxResults.put(requestCode, rxResult);
         return rxResult.doOnSubscribe(new Consumer<Disposable>() {
             @Override
@@ -51,10 +48,14 @@ public class OnResultHelperFragment extends Fragment {
         });
     }
 
-    public void startForResult(Intent intent, int requestCode, OnResultHelper.Callback callback) {
+    // WeakHashMap Instance
+    private volatile Map<Integer, OnResultHelper.Callback> mCallBacks;
+
+    public void startForResult(Intent intent, OnResultHelper.Callback callback) {
         if (mCallBacks == null) {
             mCallBacks = new WeakHashMap<>();
         }
+        final int requestCode = getRequestCode();
         mCallBacks.put(requestCode, callback);
         startActivityForResult(intent, requestCode);
     }
@@ -64,9 +65,9 @@ public class OnResultHelperFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (mRxResults != null) {
             //RxJava
-            PublishSubject<ActivityResult> rxResult = mRxResults.remove(requestCode);
+            PublishSubject<OnResultHelper.Result> rxResult = mRxResults.remove(requestCode);
             if (rxResult != null) {
-                rxResult.onNext(new ActivityResult(requestCode, resultCode, data));
+                rxResult.onNext(new OnResultHelper.Result(requestCode, resultCode, data));
                 rxResult.onComplete();
             }
         }
@@ -77,5 +78,19 @@ public class OnResultHelperFragment extends Fragment {
                 callback.onActivityResult(requestCode, resultCode, data);
             }
         }
+    }
+
+
+    // requestCode between [0,32767] here.
+    // requestCode need between (-32767 ,32768), within 16 bit.
+    private int requestCode = 0;
+
+    public synchronized int getRequestCode() {
+        int requestCode = this.requestCode;
+        this.requestCode++;
+        if (this.requestCode >= 32768) {
+            this.requestCode = 0;
+        }
+        return requestCode;
     }
 }

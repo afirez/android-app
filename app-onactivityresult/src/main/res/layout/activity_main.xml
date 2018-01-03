@@ -7,11 +7,11 @@
     tools:context="com.afirez.onactivityresult.demo.MainActivity">
 
     <TextView
-        android:onClick="onCallback"
-        android:padding="10dp"
         android:id="@+id/tv_callback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onCallback"
+        android:padding="10dp"
         android:text="Callback"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -19,25 +19,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:onClick="onRxJava"
-        android:padding="10dp"
         android:id="@+id/tv_rxjava"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onRxJava"
+        android:padding="10dp"
         android:text="RxJava"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_callback" />
 
     <TextView
-        android:onClick="onNormal"
-        android:padding="10dp"
         android:id="@+id/tv_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onNormal"
+        android:padding="10dp"
         android:text="normal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_callback" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_rxjava" />
 
 </android.support.constraint.ConstraintLayout>
