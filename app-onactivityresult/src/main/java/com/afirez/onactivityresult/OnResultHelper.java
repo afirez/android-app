@@ -55,7 +55,7 @@ public class OnResultHelper {
     }
 
     public Observable<Result> startActivityForResult(Intent intent) {
-        return onResultHelperFragment.startForResult(intent);
+        return onResultHelperFragment.startActivityForResult(intent);
     }
 
     public void startActivityForResult(Class<?> clazz, Callback callback) {
@@ -64,7 +64,7 @@ public class OnResultHelper {
     }
 
     public void startActivityForResult(Intent intent, Callback callback) {
-        onResultHelperFragment.startForResult(intent, callback);
+        onResultHelperFragment.startActivityForResult(intent, callback);
     }
 
     public interface Callback {

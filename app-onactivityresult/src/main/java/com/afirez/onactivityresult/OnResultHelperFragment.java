@@ -33,7 +33,7 @@ public class OnResultHelperFragment extends Fragment {
     // WeakHashMap Instance
     private volatile Map<Integer, PublishSubject<OnResultHelper.Result>> mRxResults;
 
-    public Observable<OnResultHelper.Result> startForResult(final Intent intent) {
+    public Observable<OnResultHelper.Result> startActivityForResult(final Intent intent) {
         PublishSubject<OnResultHelper.Result> rxResult = PublishSubject.create();
         if (mRxResults == null) {
             mRxResults = new WeakHashMap<>();
@@ -51,7 +51,7 @@ public class OnResultHelperFragment extends Fragment {
     // WeakHashMap Instance
     private volatile Map<Integer, OnResultHelper.Callback> mCallBacks;
 
-    public void startForResult(Intent intent, OnResultHelper.Callback callback) {
+    public void startActivityForResult(Intent intent, OnResultHelper.Callback callback) {
         if (mCallBacks == null) {
             mCallBacks = new WeakHashMap<>();
         }
@@ -81,16 +81,15 @@ public class OnResultHelperFragment extends Fragment {
     }
 
 
-    // requestCode between [0,32767] here.
-    // requestCode need between (-32767 ,32768), within 16 bit.
-    private int requestCode = 0;
+    // requestCode must between [0,65535] here. within 16 bits.
+    private int requestCode = 65535;
 
     public synchronized int getRequestCode() {
-        int requestCode = this.requestCode;
-        this.requestCode++;
-        if (this.requestCode >= 32768) {
-            this.requestCode = 0;
+        if (this.requestCode <= 0 || this.requestCode >= 65535) {
+            this.requestCode = 65535;
         }
+        int requestCode = this.requestCode;
+        this.requestCode--;
         return requestCode;
     }
 }
