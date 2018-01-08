@@ -82,10 +82,10 @@ public class OnResultHelperFragment extends Fragment {
 
 
     // requestCode must between [0,65535] here. within 16 bits.
-    private int requestCode = 65535;
+    private volatile int requestCode = 65535;
 
     public synchronized int getRequestCode() {
-        if (this.requestCode <= 0 || this.requestCode >= 65535) {
+        if (this.requestCode < 0 || this.requestCode > 65535) {
             this.requestCode = 65535;
         }
         int requestCode = this.requestCode;

@@ -32,12 +32,12 @@ public class OnResultHelper {
         this(fragment.getActivity());
     }
 
-    public OnResultHelperFragment getOnResultHelperFragment(FragmentActivity activity) {
+    public static OnResultHelperFragment getOnResultHelperFragment(FragmentActivity activity) {
         return (OnResultHelperFragment) getFragment(
                 activity.getSupportFragmentManager(), OnResultHelperFragment.TAG);
     }
 
-    private static Fragment getFragment(FragmentManager fm, String tag) {
+    public static Fragment getFragment(FragmentManager fm, String tag) {
         Fragment fragment = fm.findFragmentByTag(tag);
         if (fragment == null) {
             fragment = new OnResultHelperFragment();
