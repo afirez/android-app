@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -20,6 +22,24 @@ import io.reactivex.subjects.PublishSubject;
 public class OnResultHelperFragment extends Fragment {
 
     public static final String TAG = "OnResultHelperFragment";
+
+    public static OnResultHelperFragment getInstance(FragmentActivity activity) {
+        return (OnResultHelperFragment) getFragment(
+                activity.getSupportFragmentManager(), OnResultHelperFragment.TAG);
+    }
+
+    public static Fragment getFragment(FragmentManager fm, String tag) {
+        Fragment fragment = fm.findFragmentByTag(tag);
+        if (fragment == null) {
+            fragment = new OnResultHelperFragment();
+            fm.beginTransaction()
+                    .add(fragment, tag)
+                    .commitNowAllowingStateLoss();
+            fm.executePendingTransactions();
+        }
+        return fragment;
+    }
+
 
     public OnResultHelperFragment() {
     }

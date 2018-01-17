@@ -25,28 +25,11 @@ public class OnResultHelper {
     private OnResultHelperFragment onResultHelperFragment;
 
     public OnResultHelper(FragmentActivity activity) {
-        onResultHelperFragment = getOnResultHelperFragment(activity);
+        onResultHelperFragment = OnResultHelperFragment.getInstance(activity);
     }
 
     public OnResultHelper(Fragment fragment) {
         this(fragment.getActivity());
-    }
-
-    public static OnResultHelperFragment getOnResultHelperFragment(FragmentActivity activity) {
-        return (OnResultHelperFragment) getFragment(
-                activity.getSupportFragmentManager(), OnResultHelperFragment.TAG);
-    }
-
-    public static Fragment getFragment(FragmentManager fm, String tag) {
-        Fragment fragment = fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            fragment = new OnResultHelperFragment();
-            fm.beginTransaction()
-                    .add(fragment, tag)
-                    .commitNowAllowingStateLoss();
-            fm.executePendingTransactions();
-        }
-        return fragment;
     }
 
     public Observable<Result> startActivityForResult(Class<?> clazz) {

@@ -12,8 +12,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageView ivShowQrcode = (ImageView) findViewById(R.id.iv_show_qrcode);
-        ivShowQrcode.setImageBitmap(QrCodeUtils.encodeQrCode(
+        ImageView ivShowQrCode = (ImageView) findViewById(R.id.iv_show_qrcode);
+        ivShowQrCode.setImageBitmap(QrCodeUtils.encodeQrCode(
                 "你这个方法听起来不错",
                 640,
                 640
