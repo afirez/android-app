@@ -2,6 +2,7 @@ package com.afirez.ble;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 

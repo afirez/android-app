@@ -152,16 +152,12 @@ private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback(
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {//连接成功
-                Message message = new Message();
-                message.what = CONNECT_SUCCESS;
-                handler.sendMessage(message);
+                handler.obtainMessage(CONNECT_SUCCESS).sendToTarget();
 
                 //连接成功后去发现该连接的设备的服务
                 bluetoothGatt.discoverServices();
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {//连接失败 或者连接断开都会调用此方法
-                Message message = new Message();
-                message.what = CONNECT_FAILED;
-                handler.sendMessage(message);
+                handler.obtainMessage(CONNECT_FAILED).sendToTarget();
             }
         }
 }
@@ -183,9 +179,7 @@ public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 
         //通过服务可以拿到该服务的UUID，和该服务里的所有属性 Characteristic
 
-        Message message = new Message();
-        message.what = FOUND_SERVICE;
-        handler.sendMessage(message);
+        handler.obtainMessage(FOUND_SERVICE).sendToTarget();
     } else {//未发现该设备的服务
 
     }
@@ -214,14 +208,9 @@ bluetoothGatt.writeCharacteristic(gattCharacteristic);
 public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 
     if (status == BluetoothGatt.GATT_SUCCESS) {//写入成功
-        Message message = new Message();
-        message.what = SEND_DATA_SUCCESS;
-        handler.sendMessage(message);
-
+        handler.obtainMessage(SEND_DATA_SUCCESS).sendToTarget();
     } else if (status == BluetoothGatt.GATT_FAILURE) {//写入失败
-        Message message = new Message();
-        message.what = SEND_DATA_FAIL;
-         handler.sendMessage(message);
+        handler.obtainMessage(SEND_DATA_FAIL).sendToTarget();
     } else if (status == BluetoothGatt.GATT_WRITE_NOT_PERMITTED) {// 没有写入的权限
 
     }
@@ -257,5 +246,6 @@ public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristi
 
 - 如何读取蓝牙给我们返回的数据？
 - 当数据很多时， 应该如何给蓝牙发送数据？
+- 如何解析蓝牙数据?
 - 如何将蓝牙开发形成一个更完善的方案？
 - 一起进阶蓝牙 4.0 吧。
