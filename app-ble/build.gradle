@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.afirez.ble"
-        minSdkVersion 14
+        minSdkVersion 18 // ble
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
