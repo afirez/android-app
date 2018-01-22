@@ -240,6 +240,20 @@ public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristi
 - onReliableWriteCompleted - executeReliableWrite
 - onServicesDiscovered - discoverServices
 
+### 关闭蓝牙连接
+
+一旦用完蓝牙设备后，我们应该及时关闭蓝牙连接，及时释放资源。
+
+```
+public void close() {
+    if (bluetoothGatt == null) {
+        return;
+    }
+    bluetoothGatt.close();
+    bluetoothGatt = null;
+}
+```
+
 ## 进一步讨论
 
 前面我们讨论了蓝牙开发的基本知识，但还有一些问题待进一步学习：
