@@ -36,6 +36,8 @@ Android 中的 BLE 协议如下：
 > - 一个 Service 包含多个 Characteristic ；
 > - 一个 Characteristic 包含一个 Value 和多个 Descriptor；
 > - 一个 Descriptor 包含一个 Value ；
+> - Service、Characteristic、Descriptor，都拥有不同的 UUID来标识.
+>
 > 通信数据一般存储在 Characteristic 中，目前一个 Characteristic 中 最多能存储 20 byte 。
 > 与 Characteristic 相关的权限字段主要有 READ 、WRITE 、WRITE_NO_RESPONSE 和 NOTIFY 等权限字段。
 
@@ -99,7 +101,7 @@ handler.postDelayed(new Runnable() {
                     scanning = false;
                     bluetoothAdapter.stopLeScan(leScanCallback);
                 }
-            }, 10000);
+            }, scanTimeout);
 
             scanning = true;
             //需要参数 BluetoothAdapter.LeScanCallback(返回的扫描结果)
@@ -189,3 +191,50 @@ private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback(
                 }
             }
 ```
+
+### 给蓝牙设备发送数据
+
+```
+byte[] data = new byte[18];
+
+//todo put data
+
+BluetoothGattService bluetoothGattService = services.get(0);
+BluetoothGattCharacteristic gattCharacteristic = bluetoothGattService.getCharacteristic(some_uuid);
+gattCharacteristic.setValue(data);
+bluetoothGatt.writeCharacteristic(gattCharacteristic);
+```
+
+> 一般蓝牙读出写入的数据为二进制类型, 要注意整形,十六进制,字符串和二进制之间的转换.
+
+### 重写发送数据的回调方法
+
+```
+            @Override
+            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+
+                if (status == BluetoothGatt.GATT_SUCCESS) {//写入成功
+                    Message message = new Message();
+                    message.what = SEND_DATA_SUCCESS;
+                    handler.sendMessage(message);
+
+                } else if (status == BluetoothGatt.GATT_FAILURE) {//写入失败
+                    Message message = new Message();
+                    message.what = SEND_DATA_FAIL;
+                    handler.sendMessage(message);
+                } else if (status == BluetoothGatt.GATT_WRITE_NOT_PERMITTED) {// 没有写入的权限
+
+                }
+            }
+```
+
+> 注意:
+> - 蓝牙数据传输采用的是 **一应一答** 模式.
+>
+> 也就是说我们对蓝牙的操作,都会得到响应,并且不能对蓝牙进行并发操作,必须是串行的.
+> 例如我们给蓝牙发送数据时,蓝牙会在 BluetoothGattCallback 的 onCharacteristicWrite 回调方法中回调发送数据的响应结果,
+> 并且只有在 onCharacteristicWrite 方法执行完成之后才能继续发送数据.换成其他操作也是一样.
+> 蓝牙操作的所有响应都会在 BluetoothGattCallback 中回调, 可见 BluetoothGattCallback 重要性.
+
+### BluetoothGattCallback
+
