@@ -43,7 +43,7 @@ Android 中的 BLE 协议如下：
 
 ## Android 中的 BLE 开发流程
 
-### 权限配置
+### 配置权限
 
 - 使用蓝牙需要配置权限
 
@@ -238,3 +238,23 @@ bluetoothGatt.writeCharacteristic(gattCharacteristic);
 
 ### BluetoothGattCallback
 
+ **BluetoothGattCallback** 的几个方法：
+
+- onCharacteristicChanged - notification
+- onCharacteristicRead - readCharacteristic
+- onCharacteristicWrite - writeCharacteristic
+- onConnectionStateChange - 连接蓝牙或断开蓝牙连接
+- onDescriptorRead - readDescriptor
+- onDescriptorWrite - writeDescriptor
+- onReadRemoteRssi - readRemoteRssi
+- onReliableWriteCompleted - executeReliableWrite
+- onServicesDiscovered - discoverServices
+
+## 进一步讨论
+
+前面我们讨论了蓝牙开发的基本知识，但还有一些问题待进一步学习：
+
+- 如何读取蓝牙给我们返回的数据？
+- 当数据很多时， 应该如何给蓝牙发送数据？
+- 如何将蓝牙开发形成一个更完善的方案？
+- 一起进阶蓝牙 4.0 吧。
