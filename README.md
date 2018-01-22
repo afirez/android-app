@@ -231,10 +231,11 @@ public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristi
 > 注意:
 > - 蓝牙数据传输采用的是 **一应一答** 模式.
 >
-> 也就是说我们对蓝牙的操作,都会得到响应,并且不能对蓝牙进行并发操作,必须是串行的.
-> 例如我们给蓝牙发送数据时,蓝牙会在 BluetoothGattCallback 的 onCharacteristicWrite 回调方法中回调发送数据的响应结果,
-> 并且只有在 onCharacteristicWrite 方法执行完成之后才能继续发送数据.换成其他操作也是一样.
-> 蓝牙操作的所有响应都会在 BluetoothGattCallback 中回调, 可见 BluetoothGattCallback 重要性.
+>   - 也就是说我们对蓝牙的操作,都会得到响应,并且不能对蓝牙进行并发操作,必须是串行的.
+>   - 例如,我们给蓝牙发送数据时,蓝牙会在 BluetoothGattCallback 的 onCharacteristicWrite 回调方法中回调发送数据的响应结果,
+> 并且只有在 onCharacteristicWrite 方法执行完成之后才能继续发送数据.
+>   - 换成其他操作也是一样。
+>   - 蓝牙操作的所有响应都会在 BluetoothGattCallback 中回调, 可见 BluetoothGattCallback 重要性.
 
 ### BluetoothGattCallback
 
