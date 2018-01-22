@@ -96,16 +96,16 @@ if (!bluetoothAdapter.isEnabled()) {
 
 ```
 handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scanning = false;
-                    bluetoothAdapter.stopLeScan(leScanCallback);
-                }
-            }, scanTimeout);
+        @Override
+        public void run() {
+            scanning = false;
+            bluetoothAdapter.stopLeScan(leScanCallback);
+        }
+    }, scanTimeout);
 
-            scanning = true;
-            //需要参数 BluetoothAdapter.LeScanCallback(返回的扫描结果)
-            bluetoothAdapter.startLeScan(leScanCallback);
+scanning = true;
+//需要参数 BluetoothAdapter.LeScanCallback(返回的扫描结果)
+bluetoothAdapter.startLeScan(leScanCallback);
 ```
 ### 实现扫描结果的回调
 
@@ -173,23 +173,23 @@ private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback(
 继续重写 BluetoothGattCallback 中的 onServicesDiscovered 方法
 
 ```
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {//发现该设备的服务
-                    //拿到该服务
-                    // 1,通过UUID拿到指定的服务
-                    // 2,可以拿到该设备上所有服务的集合
-                    List<BluetoothGattService> serviceList = mBluetoothGatt.getServices();
+@Override
+public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+    if (status == BluetoothGatt.GATT_SUCCESS) {//发现该设备的服务
+        //拿到该服务
+        // 1,通过UUID拿到指定的服务
+        // 2,可以拿到该设备上所有服务的集合
+        List<BluetoothGattService> serviceList = mBluetoothGatt.getServices();
 
-                    //通过服务可以拿到该服务的UUID，和该服务里的所有属性 Characteristic
+        //通过服务可以拿到该服务的UUID，和该服务里的所有属性 Characteristic
 
-                    Message message = new Message();
-                    message.what = FOUND_SERVICE;
-                    handler.sendMessage(message);
-                } else {//未发现该设备的服务
+        Message message = new Message();
+        message.what = FOUND_SERVICE;
+        handler.sendMessage(message);
+    } else {//未发现该设备的服务
 
-                }
-            }
+    }
+}
 ```
 
 ### 给蓝牙设备发送数据
@@ -210,22 +210,22 @@ bluetoothGatt.writeCharacteristic(gattCharacteristic);
 ### 重写发送数据的回调方法
 
 ```
-            @Override
-            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+@Override
+public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 
-                if (status == BluetoothGatt.GATT_SUCCESS) {//写入成功
-                    Message message = new Message();
-                    message.what = SEND_DATA_SUCCESS;
-                    handler.sendMessage(message);
+    if (status == BluetoothGatt.GATT_SUCCESS) {//写入成功
+        Message message = new Message();
+        message.what = SEND_DATA_SUCCESS;
+        handler.sendMessage(message);
 
-                } else if (status == BluetoothGatt.GATT_FAILURE) {//写入失败
-                    Message message = new Message();
-                    message.what = SEND_DATA_FAIL;
-                    handler.sendMessage(message);
-                } else if (status == BluetoothGatt.GATT_WRITE_NOT_PERMITTED) {// 没有写入的权限
+    } else if (status == BluetoothGatt.GATT_FAILURE) {//写入失败
+        Message message = new Message();
+        message.what = SEND_DATA_FAIL;
+         handler.sendMessage(message);
+    } else if (status == BluetoothGatt.GATT_WRITE_NOT_PERMITTED) {// 没有写入的权限
 
-                }
-            }
+    }
+}
 ```
 
 > 注意:
