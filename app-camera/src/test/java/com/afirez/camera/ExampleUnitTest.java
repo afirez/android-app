@@ -1,4 +1,4 @@
-package com.example.camera;
+package com.afirez.camera;
 
 import org.junit.Test;
 

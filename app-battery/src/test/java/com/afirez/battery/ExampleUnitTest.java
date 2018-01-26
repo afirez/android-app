@@ -1,4 +1,4 @@
-package com.example.app_battery;
+package com.afirez.battery;
 
 import org.junit.Test;
 

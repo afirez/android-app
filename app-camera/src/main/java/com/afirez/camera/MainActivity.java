@@ -1,4 +1,4 @@
-package com.example.camera;
+package com.afirez.camera;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

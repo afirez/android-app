@@ -1,4 +1,4 @@
-package com.example.app_battery;
+package com.afirez.battery;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

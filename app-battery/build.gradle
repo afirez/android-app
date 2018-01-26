@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.example.app_battery"
+        applicationId "com.afirez.battery"
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 1
