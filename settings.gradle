@@ -1,1 +1,1 @@
-include ':app', ':app-anr', ':app-lottie', ':app-crash', ':app-onactivityresult', ':app-dagger2', ':app-qrcode', ':lib-zxing', ':app-zxing', ':app-camera'
+include ':app', ':app-anr', ':app-lottie', ':app-crash', ':app-onactivityresult', ':app-dagger2', ':app-qrcode', ':lib-zxing', ':app-zxing', ':app-camera', ':app-battery'
