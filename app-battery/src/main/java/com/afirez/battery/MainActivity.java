@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class PowerConnectionReceiver extends BroadcastReceiver {
 
-        private static final String TAG = "PowerConnectionReceiver";
+        private static final String TAG = "BatteryReceiver";
 
         @Override
         public void onReceive(Context context, Intent intent) {
