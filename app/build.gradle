@@ -1,4 +1,10 @@
-apply plugin: 'com.android.application'
+println "canRunAlone=${canRunAlone}"
+
+if (canRunAlone.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
 
 android {
     compileSdkVersion 26
@@ -11,6 +17,17 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets {
+        main {
+            if (canRunAlone.toBoolean()) {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/LibManifest.xml'
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
