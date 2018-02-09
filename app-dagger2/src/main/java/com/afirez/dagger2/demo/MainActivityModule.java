@@ -6,6 +6,5 @@ import dagger.Module;
  * Created by afirez on 18-1-4.
  */
 @Module
-public abstract class MainModule {
-
+public abstract class MainActivityModule {
 }

@@ -1,5 +1,6 @@
 package com.afirez.dagger2;
 
+import android.app.Application;
 import android.content.Context;
 
 import javax.inject.Singleton;
@@ -16,7 +17,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    Context provideContext(App app) {
+    Application provideApplication(App app) {
         return app;
     }
 }
