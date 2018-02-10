@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.afirez.mediaplayer.PlayerMainActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mp_rv_songs"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/mp_cl_player_controller"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mp_cl_player_controller"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <SeekBar
+            android:id="@+id/mp_sb_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/mp_tv_play_or_pause"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/mp_tv_time"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mp_tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:layout_constraintLeft_toRightOf="@+id/mp_sb_progress"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="00:00/18:18" />
+
+        <TextView
+            android:id="@+id/mp_tv_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="上一首"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/mp_tv_play_or_pause"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/mp_tv_play_or_pause"
+            app:layout_constraintTop_toTopOf="@+id/mp_tv_play_or_pause" />
+
+        <TextView
+            android:id="@+id/mp_tv_play_or_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/mp_tv_previous"
+            app:layout_constraintRight_toLeftOf="@+id/mp_tv_next"
+            app:layout_constraintTop_toBottomOf="@+id/mp_sb_progress"
+            tools:text="播放" />
+
+        <TextView
+            android:id="@+id/mp_tv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="下一首"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/mp_tv_play_or_pause"
+            app:layout_constraintLeft_toRightOf="@+id/mp_tv_play_or_pause"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mp_tv_play_or_pause" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
