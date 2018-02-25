@@ -195,6 +195,7 @@ public class PlayerMainActivity extends AppCompatActivity {
             }
         }
         mEntities.clear();
+        mEntities.add(new File("http://http.open.qingting.fm/786/77891.mp3?deviceid=12312&clientid=ZTQ2NTkwNGUtNmM1OS0xMWU3LTkyM2YtMDAxNjNlMDAyMGFk"));
         mEntities.addAll(mFiles);
         mAdapter.notifyDataSetChanged();
     }
