@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaDataSource;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -20,9 +22,11 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +41,9 @@ public class PlayerMainActivity extends AppCompatActivity {
     private RecyclerView rvSongs;
     private volatile boolean mIsPlaying;
     private SeekBar sbProgress;
+
+    public static final String URL =
+            "http://http.open.qingting.fm/786/77891.mp3?deviceid=12312&clientid=ZTQ2NTkwNGUtNmM1OS0xMWU3LTkyM2YtMDAxNjNlMDAyMGFk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +121,12 @@ public class PlayerMainActivity extends AppCompatActivity {
                         PlayerMainActivity.this,
                         MusicPlayerService.class
                 );
-                intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+
+                if (currentPosition == 0) {
+                    intent.putExtra("path", URL);
+                } else {
+                    intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+                }
                 intent.putExtra("isPlaying", mIsPlaying);
                 intent.putExtra("operation", "playOrPause");
                 intent.putExtra("progress", mProgress);
@@ -139,7 +151,11 @@ public class PlayerMainActivity extends AppCompatActivity {
                         PlayerMainActivity.this,
                         MusicPlayerService.class
                 );
-                intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+                if (currentPosition == 0) {
+                    intent.putExtra("path", URL);
+                } else {
+                    intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+                }
                 intent.putExtra("operation", "previous");
                 intent.putExtra("progress", mProgress);
                 startService(intent);
@@ -160,7 +176,12 @@ public class PlayerMainActivity extends AppCompatActivity {
                         PlayerMainActivity.this,
                         MusicPlayerService.class
                 );
-                intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+
+                if (currentPosition == 0) {
+                    intent.putExtra("path", URL);
+                } else {
+                    intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+                }
                 intent.putExtra("operation", "next");
                 intent.putExtra("progress", mProgress);
                 startService(intent);
@@ -233,7 +254,11 @@ public class PlayerMainActivity extends AppCompatActivity {
                     PlayerMainActivity.this,
                     MusicPlayerService.class
             );
-            intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+            if (position == 0) {
+                intent.putExtra("path", URL);
+            } else {
+                intent.putExtra("path", mEntities.get(currentPosition).getAbsolutePath());
+            }
             intent.putExtra("operation", "random");
             intent.putExtra("progress", mProgress);
             startService(intent);
@@ -280,9 +305,12 @@ public class PlayerMainActivity extends AppCompatActivity {
             if (mMetadataRetriever == null) {
                 mMetadataRetriever = new MediaMetadataRetriever();
             }
-            mMetadataRetriever.setDataSource(entity.getAbsolutePath());
-            String author = mMetadataRetriever.extractMetadata(
-                    MediaMetadataRetriever.METADATA_KEY_AUTHOR);
+            String author = "";
+            if (position != 0) {
+                mMetadataRetriever.setDataSource(entity.getAbsolutePath());
+                author = mMetadataRetriever.extractMetadata(
+                        MediaMetadataRetriever.METADATA_KEY_AUTHOR);
+            }
             holder.tvAuthor.setText(TextUtils.isEmpty(author) ? "不知名歌手" : author);
         }
 
