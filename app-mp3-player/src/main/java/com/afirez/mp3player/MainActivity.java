@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvPlay;
     private TextView tvStop;
     private TextView tvMediaPlayer;
+    private TextView tvIjkPlayer;
 
 
     @Override
@@ -38,6 +39,16 @@ public class MainActivity extends AppCompatActivity {
         tvPlay = (TextView) findViewById(R.id.mp_tv_play);
         tvStop = (TextView) findViewById(R.id.mp_tv_stop);
         tvMediaPlayer = (TextView) findViewById(R.id.mp_tv_media_player);
+        tvIjkPlayer = (TextView) findViewById(R.id.mp_tv_ijk_player);
+
+        tvIjkPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                release();
+                Intent intent = new Intent(MainActivity.this, Main3Activity.class);
+                startActivity(intent);
+            }
+        });
 
         tvMediaPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
