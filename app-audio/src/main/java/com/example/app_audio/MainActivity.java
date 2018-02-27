@@ -260,5 +260,8 @@ public class MainActivity extends AppCompatActivity {
         if (bgHandler != null) {
             bgHandler.removeCallbacksAndMessages(null);
         }
+        if (uiHandler != null) {
+            uiHandler.removeCallbacksAndMessages(null);
+        }
     }
 }
