@@ -1,10 +1,18 @@
-package com.afirez.wav;
+package com.afirez.wav.api.wav;
 
 /**
  * Created by afirez on 2018/2/27.
  */
 
 public class WavFileHeader {
+
+    public static final int WAV_HEADER_SIZE = 44;
+    public static final int WAV_CHUNK_SIZE_EXCLUDE_DATA = 36;
+
+    public static final int WAV_CHUNK_SIZE_OFFSET = 4;
+    public static final int WAV_SUB_CHUNK1_SIZE_OFFSET = 16;
+    public static final int WAV_SUB_CHUNK2_SIZE_OFFSET = 40;
+
     public String chunkId = "RIFF";
     public int chunkSize = 0;
     public String format = "WAVE";
@@ -22,6 +30,7 @@ public class WavFileHeader {
     public int subChunk2Size = 0;        //data size
 
     public WavFileHeader() {
+
     }
 
     public WavFileHeader(int sampleRateInHz, int bitsPerSample, int numChannel) {

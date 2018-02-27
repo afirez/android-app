@@ -1,4 +1,4 @@
-package com.afirez.wav;
+package com.afirez.wav.api.wav;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
