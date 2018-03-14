@@ -1,17 +1,30 @@
 package com.afirez.zxing;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.DecodeHintType;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by afirez on 18-1-9.
@@ -86,5 +99,33 @@ public class QrCodeUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static final Map<DecodeHintType, Object> HINTS = new EnumMap<>(DecodeHintType.class);
+    @SuppressLint("StaticFieldLeak")
+    public static void decodeQRCode(final Context context, final Bitmap bitmap) {
+        AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                try {
+                    int width = bitmap.getWidth();
+                    int height = bitmap.getHeight();
+                    int[] pixels = new int[width * height];
+                    bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+                    RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
+                    Result result = new MultiFormatReader().decode(new BinaryBitmap(new HybridBinarizer(source)), HINTS);
+                    return result.getText();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                Log.d("wxl", "result=" + result);
+                Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+            }
+        };
+        task.execute();
     }
 }

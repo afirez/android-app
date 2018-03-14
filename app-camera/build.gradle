@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.example.camera"
+        applicationId "com.afirez.camera"
         minSdkVersion 14
         targetSdkVersion 26
         versionCode 1
