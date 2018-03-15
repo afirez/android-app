@@ -16,6 +16,30 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
+        android:id="@+id/camera_tv_switch_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onTvSwitchCamera"
+        android:padding="10dp"
+        android:textColor="#00ff00"
+        android:text="switch camera"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/camera_tv_camera_mirror"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/camera_tv_camera_mirror"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onTvCameraMirror"
+        android:padding="10dp"
+        android:textColor="#00ff00"
+        android:text="mirror"
+        app:layout_constraintLeft_toRightOf="@+id/camera_tv_switch_camera"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
         android:id="@+id/camera_tv_start_preview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +49,7 @@
         android:text="start camera preview"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/camera_tv_switch_camera"/>
 
 
     <TextView
@@ -75,5 +99,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/camera_tv_set_one_shot_preview_callback"/>
+
+    <TextView
+        android:id="@+id/camera_tv_add_callback_buffer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textColor="#00ff00"
+        android:onClick="onTvAddCameraCallbackBuffer"
+        android:text="add buffer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/camera_tv_set_preview_callback_with_buffer"/>
 
 </android.support.constraint.ConstraintLayout>

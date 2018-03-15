@@ -1,13 +1,18 @@
 package com.afirez.camera;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -17,6 +22,18 @@ import java.util.List;
 public class CameraUtils {
 
     private static final String TAG = "CameraUtils";
+
+    public static int getCameraId(int cameraFacing) {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == cameraFacing) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     public static Camera openByFacing(int cameraFacing) {
         int numberOfCameras = Camera.getNumberOfCameras();
@@ -128,20 +145,161 @@ public class CameraUtils {
         }
     }
 
-    public static void setPreviewCallbackWithBuffer(Camera camera, byte[] buffer, Camera.PreviewCallback previewCallback) {
+    public static void setPreviewCallbackWithBuffer(Camera camera, Camera.PreviewCallback previewCallback) {
         if (camera == null) {
             Log.e(TAG, "camera == null while setOneShotPreviewCallback for camera");
             return;
         }
         Log.e(TAG, "previewCallback: " + previewCallback);
         try {
-            camera.addCallbackBuffer(buffer);
             camera.setPreviewCallbackWithBuffer(previewCallback);
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
+    public static void addCallbackBuffer(Camera camera, byte[] buffer) {
+        if (camera == null) {
+            Log.e(TAG, "camera == null while addCallbackBuffer for camera");
+            return;
+        }
+        Log.e(TAG, "addCallbackBuffer: " + buffer);
+        try {
+            camera.addCallbackBuffer(buffer);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Camera.Size calculateSize(List<Camera.Size> sizes, int targetWidth, int targetHeight) {
+        if (sizes == null || sizes.isEmpty()) {
+            return null;
+        }
+        sortSizes(sizes);
+        Camera.Size targetSize = sizes.get(0);
+        boolean singleCalculated = false;
+        for (Camera.Size size : sizes) {
+            if (size.width == targetWidth && size.height == targetHeight) {
+                // 宽高相等，直接返回
+                targetSize = size;
+                break;
+            }
+            if (size.width == targetWidth) {
+                // 宽相等，选高最接近的
+                singleCalculated = true;
+                if (Math.abs(targetSize.height - targetHeight)
+                        > Math.abs(size.height - targetHeight)) {
+                    targetSize = size;
+                }
+            } else if (targetSize.height == targetHeight) {
+                // 高相等，选宽最接近的
+                singleCalculated = true;
+                if (Math.abs(targetSize.width - targetWidth)
+                        > Math.abs(size.width - targetWidth)) {
+                    targetSize = size;
+                }
+            } else if (!singleCalculated) {
+                // 没有宽或高相等的， 选宽和高均为最接近的
+                if (Math.abs(targetSize.width - targetWidth)
+                        > Math.abs(size.width - targetWidth)
+                        && Math.abs(targetSize.height - targetHeight)
+                        > Math.abs(size.height - targetHeight)) {
+                    targetSize = size;
+                }
+            }
+        }
+        return targetSize;
+    }
+
+    private static void sortSizes(List<Camera.Size> sizes) {
+        if (sizes == null || sizes.isEmpty()) {
+            return;
+        }
+        Collections.sort(sizes, new Comparator<Camera.Size>() {
+            @Override
+            public int compare(Camera.Size a, Camera.Size b) {
+                if (a.width > b.width) {
+                    return 1;
+                } else if (a.width < b.width) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+    }
+
+    public static int calculateAndSetFps(Camera.Parameters parameters, int targetThousandFps) {
+        if (parameters == null) {
+            return 0;
+        }
+        List<int[]> supportedFpsRanges = parameters.getSupportedPreviewFpsRange();
+        for (int[] fpsRange : supportedFpsRanges) {
+            if (fpsRange[0] == fpsRange[1] && fpsRange[0] == targetThousandFps) {
+                parameters.setPreviewFpsRange(fpsRange[0], fpsRange[1]);
+                return fpsRange[0];
+            }
+        }
+        int targetFps;
+        int[] tempFpsRange = new int[2];
+        parameters.getPreviewFpsRange(tempFpsRange);
+        if (tempFpsRange[0] == tempFpsRange[1]) {
+            targetFps = tempFpsRange[0];
+        } else {
+            targetFps = tempFpsRange[1] / 2;
+        }
+        return targetFps;
+    }
+
+    public static int calculateRotation(Activity activity, int cameraId) {
+        if (activity == null) {
+            return 0;
+        }
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, cameraInfo);
+        int rotation = activity.getWindowManager().getDefaultDisplay()
+                .getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+        int targetRotation;
+        if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            targetRotation = (cameraInfo.orientation + degrees) % 360;
+            targetRotation = (360 - targetRotation) % 360;
+        } else {
+            targetRotation = (360 + cameraInfo.orientation - degrees) % 360;
+        }
+        return targetRotation;
+    }
+
+    public static int calculateBufferSize(Camera camera) {
+        if (camera == null) {
+            return 0;
+        }
+        Camera.Parameters parameters = camera.getParameters();
+        if (parameters == null) {
+            return 0;
+        }
+        Camera.Size previewSize = parameters.getPreviewSize();
+        if (previewSize == null) {
+            return 0;
+        }
+        int previewFormat = parameters.getPreviewFormat();
+        int bitsPerPixel = ImageFormat.getBitsPerPixel(previewFormat);
+        float bytesPerPixel = bitsPerPixel / 8f;
+        return (int) (previewSize.height * previewSize.width * bytesPerPixel);
+    }
 
     public static boolean hasCameraDevice(Context context) {
         return context.getPackageManager()
