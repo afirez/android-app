@@ -12,7 +12,7 @@ import android.util.Log;
 public class AudioPlayer {
     private static final String TAG = "AudioPlayer";
 
-    private static final int DEFAULT_STREAN_TYPE = AudioManager.STREAM_MUSIC;
+    private static final int DEFAULT_STREAM_TYPE = AudioManager.STREAM_MUSIC;
     private static final int DEFAULT_SAMPLE_RATE = 44100;
     private static final int DEFAULT_CHANNEL_CONFIG = AudioFormat.CHANNEL_OUT_MONO;
     private static final int DEFAULT_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
@@ -23,6 +23,15 @@ public class AudioPlayer {
     private volatile boolean isPlayStarted;
 
     private AudioTrack audioTrack;
+
+    public boolean prepare(){
+        return prepare(
+                DEFAULT_STREAM_TYPE,
+                DEFAULT_SAMPLE_RATE,
+                DEFAULT_CHANNEL_CONFIG,
+                DEFAULT_FORMAT
+        );
+    }
 
     public boolean prepare(
             int streamType,
@@ -88,6 +97,7 @@ public class AudioPlayer {
             Log.e(TAG, "could not write all the samples to the audio devices!");
         }
         audioTrack.play();
+        Log.d(TAG, "OK, Played " + count + " bytes !");
         return true;
     }
 }

@@ -20,14 +20,14 @@ public class AudioCapturer {
 
     private static final int SAMPLES_PER_FRAME = 1024;
 
-    public interface OnAudioFrameCapturedListener {
-        void onAudioFrameCaptured(byte[] buffer);
+    public interface OnFrameCapturedListener {
+        void onFrameCaptured(byte[] buffer);
     }
 
-    private OnAudioFrameCapturedListener onAudioFrameCapturedListener;
+    private OnFrameCapturedListener onFrameCapturedListener;
 
-    public void setOnAudioFrameCapturedListner(OnAudioFrameCapturedListener onAudioFrameCapturedListener) {
-        this.onAudioFrameCapturedListener = onAudioFrameCapturedListener;
+    public void setOnAudioFrameCapturedListner(OnFrameCapturedListener onFrameCapturedListener) {
+        this.onFrameCapturedListener = onFrameCapturedListener;
     }
 
     private volatile boolean isCaptureStarted;
@@ -113,17 +113,18 @@ public class AudioCapturer {
 
         audioRecord.release();
         isCaptureStarted = false;
-        onAudioFrameCapturedListener = null;
+        onFrameCapturedListener = null;
 
         Log.i(TAG, "stopCapture: success");
     }
 
     private class AudioCaptureRunnable implements Runnable {
 
+        private byte[] buffer = new byte[SAMPLES_PER_FRAME * 2];
+
         @Override
         public void run() {
             while (!isLoopExit) {
-                byte[] buffer = new byte[SAMPLES_PER_FRAME * 2];
                 int read = audioRecord.read(buffer, 0, buffer.length);
                 if (read == AudioRecord.ERROR_INVALID_OPERATION) {
                     Log.e(TAG, "Error: ERROR_INVALID_OPERATION");
@@ -131,8 +132,8 @@ public class AudioCapturer {
                     Log.e(TAG, "Error: ERROR_BAD_VALUE");
                 } else {
                     Log.i(TAG, "Audio captured: " + buffer.length);
-                    if (onAudioFrameCapturedListener != null) {
-                        onAudioFrameCapturedListener.onAudioFrameCaptured(buffer);
+                    if (onFrameCapturedListener != null && buffer != null) {
+                        onFrameCapturedListener.onFrameCaptured(buffer.clone());
                     }
                 }
             }
