@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
  * releaseOutputBuffer
  * }
  * 5. stop
- * 6. release
+ * 6. recycle
  * <p>
  * Created by afirez on 18-3-20.
  */

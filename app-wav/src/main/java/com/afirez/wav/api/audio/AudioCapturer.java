@@ -118,13 +118,13 @@ public class AudioCapturer {
         Log.i(TAG, "stopCapture: success");
     }
 
+    private AudioFrameBuffers mAudioFrameBuffers = new AudioFrameBuffers();
+
     private class AudioCaptureRunnable implements Runnable {
-
-        private byte[] buffer = new byte[SAMPLES_PER_FRAME * 2];
-
         @Override
         public void run() {
             while (!isLoopExit) {
+                byte[] buffer = mAudioFrameBuffers.obtain(SAMPLES_PER_FRAME * 2);
                 int read = audioRecord.read(buffer, 0, buffer.length);
                 if (read == AudioRecord.ERROR_INVALID_OPERATION) {
                     Log.e(TAG, "Error: ERROR_INVALID_OPERATION");
@@ -132,8 +132,8 @@ public class AudioCapturer {
                     Log.e(TAG, "Error: ERROR_BAD_VALUE");
                 } else {
                     Log.i(TAG, "Audio captured: " + buffer.length);
-                    if (onFrameCapturedListener != null && buffer != null) {
-                        onFrameCapturedListener.onFrameCaptured(buffer.clone());
+                    if (onFrameCapturedListener != null) {
+                        onFrameCapturedListener.onFrameCaptured(buffer);
                     }
                 }
             }
