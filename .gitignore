@@ -21,7 +21,6 @@ build/
 
 #Android
 local.properties
-gradle.properties
 bin/
 gen/
 
