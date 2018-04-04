@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MyBle";
 
     private BluetoothAdapter adapter;
 
@@ -45,10 +45,11 @@ public class MainActivity extends AppCompatActivity {
         if (adapter != null && !adapter.isEnabled()) {
             adapter.enable();
         }
-
-        Handler bgHandler = bgHandler();
-        bgHandler.postDelayed(stopScanRunnable, scanTimeout);
-        bgHandler.post(startScanRunnable);
+        if (adapter != null && adapter.isEnabled()) {
+            Handler bleHandler = bleHandler();
+            bleHandler.postDelayed(stopScanRunnable, scanTimeout);
+            bleHandler.post(startScanRunnable);
+        }
     }
 
     private volatile boolean scanning;
@@ -60,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
     private Runnable startScanRunnable = new Runnable() {
         @Override
         public void run() {
+            Log.i(TAG, "run: ");
             if (!scanning && leScanCallback != null) {
                 scanning = true;
-                Log.i(TAG, "startScan: ");
+                Log.i(TAG, "startScan: thread: " + Thread.currentThread().getName() + (Thread.currentThread() == bleHandler().getLooper().getThread()));
                 adapter.startLeScan(leScanCallback);
             }
         }
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (scanning && leScanCallback != null) {
-                Log.i(TAG, "stopScan: ");
+                Log.i(TAG, "stopScan: thread: " + Thread.currentThread().getName() + (Thread.currentThread() == bleHandler().getLooper().getThread()));
                 adapter.stopLeScan(leScanCallback);
                 scanning = false;
             }
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
             Thread thread = Thread.currentThread();
+            Log.i(TAG, "onLeScan: thread:" + thread.getName() + (thread == bleHandler().getLooper().getThread()));
             if (device == null || device.getName() == null) {
                 Toast.makeText(
                         MainActivity.this,
@@ -105,15 +108,18 @@ public class MainActivity extends AppCompatActivity {
     BluetoothGatt gatt;
 
     private void connectGatt(final BluetoothDevice device) {
-        Handler bgHandler = bgHandler();
-        bgHandler.post(stopScanRunnable);
-        bgHandler.post(connectGattRunnable);
+        Handler bleHandler = bleHandler();
+        bleHandler.post(stopScanRunnable);
+        bleHandler.post(connectGattRunnable);
     }
 
     private Runnable connectGattRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.i(TAG, "connectGatt");
+            Log.i(TAG, "connectGatt: thread: " + Thread.currentThread().getName());
+            if (device == null) {
+                return;
+            }
             gatt = device.connectGatt(
                     MainActivity.this,
                     false,
@@ -126,9 +132,10 @@ public class MainActivity extends AppCompatActivity {
         public void onConnectionStateChange(final BluetoothGatt gatt, int status, final int newState) {
             // binder thread
             Thread thread = Thread.currentThread();
-            Handler bgHandler = bgHandler();
+            Log.i(TAG, "onConnectionStateChange: thread:" + thread.getName() + (thread == bleHandler().getLooper().getThread()));
+            Handler bleHandler = bleHandler();
             MainActivity.this.newState = newState;
-            bgHandler.post(onConnectionStateChangedRunnable);
+            bleHandler.post(onConnectionStateChangedRunnable);
         }
 
 
@@ -136,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             // binder thread
             Thread thread = Thread.currentThread();
+            Log.i(TAG, "onConnectionStateChange: thread:" + thread.getName() + (thread == bleHandler().getLooper().getThread()));
             if (status != BluetoothGatt.GATT_SUCCESS) {
 //                Toast.makeText(
 //                        MainActivity.this,
@@ -154,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private int newState;
+    private volatile int newState;
 
     private Runnable onConnectionStateChangedRunnable = new Runnable() {
 
@@ -195,35 +203,35 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-    private Handler bgHandler;
 
-    private Handler bgHandler() {
-        if (bgHandler == null) {
-            synchronized (this) {
-                if (bgHandler == null) {
+    private Handler bleHandler;
+    private final Object bleLock = new Object();
+
+    private Handler bleHandler() {
+        if (bleHandler == null) {
+            synchronized (bleLock) {
+                if (bleHandler == null) {
                     HandlerThread thread = new HandlerThread(
-                            "bg-ble",
+                            "ble",
                             Process.THREAD_PRIORITY_BACKGROUND);
                     thread.start();
-                    bgHandler = new Handler(thread.getLooper());
+                    bleHandler = new Handler(thread.getLooper());
                 }
             }
         }
-        return bgHandler;
+        return bleHandler;
     }
 
     @Override
     protected void onDestroy() {
-        if (bgHandler != null) {
-            bgHandler.removeCallbacksAndMessages(null);
+        if (bleHandler != null) {
+            bleHandler.removeCallbacksAndMessages(null);
         }
-
         if (gatt != null) {
             gatt.disconnect();
             gatt.close();
             gatt = null;
         }
-
         if (adapter != null && adapter.isEnabled()) {
             adapter.disable();
         }
