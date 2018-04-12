@@ -21,7 +21,11 @@
         <service
             android:name=".server.RemoteService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.afirez.binder.server"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
