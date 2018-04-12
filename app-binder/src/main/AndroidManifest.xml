@@ -20,6 +20,7 @@
 
         <service
             android:name=".server.RemoteService"
+            android:process=":remote"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

@@ -23,7 +23,7 @@ public class ClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.binder_activity_client);
         clientFragment = Fragments.of(this, ClientFragment.class);
-
+        Log.d(TAG, "onCreate: " + Thread.currentThread().getId());
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         Log.d(TAG, "fragments: " + fragments);
 
@@ -33,7 +33,9 @@ public class ClientActivity extends AppCompatActivity {
                 Book book = new Book();
                 book.setName("阅读");
                 book.setPrice(18);
-                clientFragment.addBook(book);
+                if (clientFragment != null) {
+                    clientFragment.addBook(book);
+                }
             }
         });
     }

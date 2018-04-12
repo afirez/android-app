@@ -3,10 +3,11 @@ package com.afirez.binder.proxy;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.afirez.binder.api.Book;
 import com.afirez.binder.api.IBookManager;
-import com.afirez.binder.server.IBookManagerStub;
+import com.afirez.binder.stub.IBookManagerStub;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ import java.util.List;
  */
 
 public class IBookManagerProxy implements IBookManager {
+
+    private static final String TAG = "IBookManagerProxy";
 
     private static final String DESCRIPTOR = "com.afirez.binder.api.IBookManager";
 
@@ -26,9 +29,11 @@ public class IBookManagerProxy implements IBookManager {
 
     @Override
     public void addBook(Book book) throws RemoteException {
+        Log.d(TAG, "addBook: " + Thread.currentThread().getName());
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
         try {
+            data.writeInterfaceToken(DESCRIPTOR);
             if (book != null) {
                 data.writeInt(1);
                 book.writeToParcel(data, 0);
@@ -41,10 +46,12 @@ public class IBookManagerProxy implements IBookManager {
             reply.recycle();
             data.recycle();
         }
+        Log.d(TAG, "addBook: " + Thread.currentThread().getName());
     }
 
     @Override
     public List<Book> getBooks() throws RemoteException {
+        Log.d(TAG, "getBooks: " + Thread.currentThread().getName());
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
         List<Book> result;
@@ -57,6 +64,7 @@ public class IBookManagerProxy implements IBookManager {
             reply.recycle();
             data.recycle();
         }
+        Log.d(TAG, "getBooks: " + Thread.currentThread().getName());
         return result;
     }
 
