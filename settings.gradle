@@ -1,1 +1,1 @@
-include ':app-ble', ':lib-ble', ':app-bluetooth'
+include ':app-ble', ':lib-ble', ':app-bluetooth', ':app-bluetooth-chat'
