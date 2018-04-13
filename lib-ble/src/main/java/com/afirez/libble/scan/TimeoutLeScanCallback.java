@@ -1,10 +1,10 @@
-package com.afirez.ble.scan;
+package com.afirez.libble.scan;
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.afirez.ble.LiteBle;
+import com.afirez.libble.LiteBle;
 
 /**
  * Created by afirez on 2018/4/10.

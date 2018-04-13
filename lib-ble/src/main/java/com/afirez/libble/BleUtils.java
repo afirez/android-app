@@ -1,4 +1,4 @@
-package com.afirez.ble;
+package com.afirez.libble;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -23,6 +23,8 @@ import java.util.UUID;
 public class BleUtils {
 
     public static final String TAG = "Bluetooth";
+
+    public static final String UUID_DESCRIPTOR_NOTIFY = "00002902-0000-1000-8000-00805f9b34fb";
 
     public static void enableBluetooth(Activity activity, int requestCode) {
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -120,5 +122,26 @@ public class BleUtils {
             return null;
         }
         return service.getCharacteristic(UUID.fromString(characteristicUUID));
+    }
+
+    public static void setCharacteristicNotification(
+            BluetoothGatt gatt,
+            BluetoothGattCharacteristic characteristic,
+            boolean notify) {
+        if (gatt == null) {
+            return;
+        }
+        if (characteristic == null) {
+            return;
+        }
+        gatt.setCharacteristicNotification(characteristic, notify);
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(UUID_DESCRIPTOR_NOTIFY));
+        if (descriptor != null) {
+            descriptor.setValue(notify
+                    ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                    : BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
+            );
+            gatt.writeDescriptor(descriptor);
+        }
     }
 }

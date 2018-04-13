@@ -11,30 +11,28 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.opengl.ETC1;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.afirez.libble.BleUtils;
+import com.afirez.libble.HexString;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.UUID;
+
+import static com.afirez.ble.Constant.UUID_CHARACTERISTIC_NOTIFY;
+import static com.afirez.ble.Constant.UUID_SERVICE;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Bluetooth";
-
-    public static final String UUID_SERVICE = "0003cdd0-0000-1000-8000-00805f9b0131";
-    public static final String UUID_CHARACTERISTIC_NOTIFY = "0003cdd1-0000-1000-8000-00805f9b0131";
-    // interval : 10-20ms
-    public static final String UUID_CHARACTERISTIC_WRITE_NO_RESPONSE = "0003cdd2-0000-1000-8000-00805f9b0131";
 
     private BluetoothAdapter adapter;
     private EditText etAddress;
@@ -62,33 +60,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void connectDevice(String address) {
         if (!BluetoothAdapter.checkBluetoothAddress(address)) {
-            Log.i(TAG, "connectDevice: address == null");
+            Log.d(TAG, "connectDevice: address == null");
             return;
         }
         if (adapter == null) {
             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                Log.i(TAG, "startScan: no ble");
+                Log.d(TAG, "startScan: no ble");
                 return;
             }
             BluetoothManager manager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (manager == null) {
-                Log.i(TAG, "startScan: manager == null");
+                Log.d(TAG, "startScan: manager == null");
                 return;
             }
             adapter = manager.getAdapter();
         }
         if (adapter == null) {
-            Log.i(TAG, "startScan: adapter == null");
+            Log.d(TAG, "startScan: adapter == null");
             return;
         }
         if (gatt != null) {
-            Log.i(TAG, "gatt.close: ");
+            Log.d(TAG, "gatt.close: ");
             gatt.disconnect();
             gatt.close();
             gatt = null;
         }
         if (!adapter.isEnabled()) {
-            Log.i(TAG, "startScan: enable ble");
+            Log.d(TAG, "startScan: enable ble");
             adapter.enable();
         }
         device = adapter.getRemoteDevice(address);
@@ -98,18 +96,18 @@ public class MainActivity extends AppCompatActivity {
     private void startScan() {
         if (adapter == null) {
             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                Log.i(TAG, "startScan: no ble");
+                Log.d(TAG, "startScan: no ble");
                 return;
             }
             BluetoothManager manager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (manager == null) {
-                Log.i(TAG, "startScan: no ble");
+                Log.d(TAG, "startScan: no ble");
                 return;
             }
             adapter = manager.getAdapter();
         }
         if (adapter == null) {
-            Log.i(TAG, "startScan: no ble");
+            Log.d(TAG, "startScan: no ble");
             return;
         }
 //        if (adapter.isEnabled()) {
@@ -121,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
             gatt = null;
 //            adapter.disable();
         }
-        Log.i(TAG, "run: isDiscovering: " + adapter.isDiscovering());
+        Log.d(TAG, "run: isDiscovering: " + adapter.isDiscovering());
         if (!adapter.isEnabled()) {
-            Log.i(TAG, "startScan: enable ble");
+            Log.d(TAG, "startScan: enable ble");
             adapter.enable();
-            Log.i(TAG, "run: isDiscovering: " + adapter.isDiscovering());
+            Log.d(TAG, "run: isDiscovering: " + adapter.isDiscovering());
         }
         if (adapter != null && adapter.isEnabled()) {
             Handler bleHandler = bleHandler();
@@ -143,11 +141,11 @@ public class MainActivity extends AppCompatActivity {
     private Runnable startScanRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.i(TAG, "run: ");
+            Log.d(TAG, "run: ");
             if (adapter != null && !scanning && leScanCallback != null) {
                 scanning = true;
-                Log.i(TAG, "run: isDiscovering: " + adapter.isDiscovering());
-                Log.i(TAG, "startScan: thread: " + Thread.currentThread().getName() + (Thread.currentThread() == bleHandler().getLooper().getThread()));
+                Log.d(TAG, "run: isDiscovering: " + adapter.isDiscovering());
+                Log.d(TAG, "startScan: thread: " + Thread.currentThread().getName() + (Thread.currentThread() == bleHandler().getLooper().getThread()));
                 adapter.startLeScan(leScanCallback);
             }
         }
@@ -157,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (adapter != null && scanning && leScanCallback != null) {
-                Log.i(TAG, "run: isDiscovering: " + adapter.isDiscovering());
-                Log.i(TAG, "stopScan: thread: " + Thread.currentThread().getName() + (Thread.currentThread() == bleHandler().getLooper().getThread()));
+                Log.d(TAG, "run: isDiscovering: " + adapter.isDiscovering());
+                Log.d(TAG, "stopScan: thread: " + Thread.currentThread().getName() + (Thread.currentThread() == bleHandler().getLooper().getThread()));
                 adapter.stopLeScan(leScanCallback);
                 scanning = false;
             }
@@ -169,14 +167,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
             Thread thread = Thread.currentThread();
-            Log.i(TAG, "onLeScan: thread:" + thread.getName() + (thread == bleHandler().getLooper().getThread()));
+            Log.d(TAG, "onLeScan: thread:" + thread.getName() + (thread == bleHandler().getLooper().getThread()));
             if (device == null) {
-                Log.i(TAG, "onLeScan: no device");
+                Log.d(TAG, "onLeScan: no device");
                 return;
             }
             String name = device.getName();
             name = TextUtils.isEmpty(name) ? "device" : name;
-            Log.i(TAG, "onLeScan: found: " + name + ": " + device.getAddress());
+            Log.d(TAG, "onLeScan: found: " + name + ": " + device.getAddress());
             MainActivity.this.device = device;
             connectGatt(device);
         }
@@ -193,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     private Runnable connectGattRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.i(TAG, "connectGatt: thread: " + Thread.currentThread().getName());
+            Log.d(TAG, "connectGatt: thread: " + Thread.currentThread().getName());
             if (device != null) {
                 if (gatt != null) {
                     gatt.disconnect();
@@ -215,9 +213,9 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(final BluetoothGatt gatt, int status, final int newState) {
-            Log.i(TAG, "onConnectionStateChange: op : " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "failed"));
+            Log.d(TAG, "onConnectionStateChange: op : " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "failed"));
             Thread thread = Thread.currentThread();
-            Log.i(TAG, "onConnectionStateChange: thread:" + thread.getName());
+            Log.d(TAG, "onConnectionStateChange: thread:" + thread.getName());
             Handler bleHandler = bleHandler();
             MainActivity.this.newState = newState;
             bleHandler.post(onConnectionStateChangedRunnable);
@@ -226,33 +224,43 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            Log.i(TAG, "onConnectionStateChange: op : " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "failed"));
+            Log.d(TAG, "onConnectionStateChange: op : " + (status == BluetoothGatt.GATT_SUCCESS ? "success" : "failed"));
             Thread thread = Thread.currentThread();
-            Log.i(TAG, "onConnectionStateChange: thread:" + thread.getName());
+            Log.d(TAG, "onConnectionStateChange: thread:" + thread.getName());
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                Log.i(TAG, "未发现服务");
+                Log.d(TAG, "Services not Discovered");
                 return;
             }
-            Log.i(TAG, "发现服务了");
+            Log.d(TAG, "Services Discovered");
             bleHandler().post(onServicesDiscoveredRunnable);
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-            Log.i(TAG, "onCharacteristicChanged: ");
+            Log.d(TAG, "onCharacteristicChanged: " + characteristic.getUuid().toString());
+            Log.d(TAG, "onCharacteristicChanged: " + HexString.bytesToHex(characteristic.getValue()));
+            if (gatt != null) {
+                gatt.readCharacteristic(characteristic);
+            }
         }
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
-            Log.i(TAG, "onCharacteristicRead: ");
+            Log.d(TAG, "onCharacteristicRead: " + characteristic.getUuid().toString());
+        }
+
+        @Override
+        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            super.onDescriptorRead(gatt, descriptor, status);
+            Log.d(TAG, "onDescriptorRead: " + descriptor.getUuid().toString());
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
-            Log.i(TAG, "onDescriptorWrite: ");
+            Log.d(TAG, "onDescriptorWrite: " + descriptor.getUuid().toString());
         }
     };
 
@@ -263,13 +271,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Log.i(TAG, "连接已断开");
+                Log.d(TAG, "Disconnected");
                 return;
             }
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                Log.i(TAG, "连接成功");
+                Log.d(TAG, "Connected to " + gatt.getDevice().getAddress());
                 if (gatt != null) {
-                    Log.i(TAG, "discoverServices");
+                    Log.d(TAG, "Discover Services");
                     gatt.discoverServices();
                 }
             }
@@ -283,22 +291,9 @@ public class MainActivity extends AppCompatActivity {
             if (gatt != null) {
                 BluetoothGattService service = gatt.getService(UUID.fromString(UUID_SERVICE));
                 if (service != null) {
-                    BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString(UUID_CHARACTERISTIC_NOTIFY));
-                    if (characteristic != null) {
-                        boolean succeed = gatt.setCharacteristicNotification(characteristic, true);
-                        if (succeed) {
-                            List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
-                            if (descriptors != null) {
-                                for (BluetoothGattDescriptor descriptor : descriptors) {
-                                    if (descriptor != null) {
-                                        succeed = descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-                                        if (succeed) {
-                                            gatt.writeDescriptor(descriptor);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    BluetoothGattCharacteristic notifyCharacteristic = service.getCharacteristic(UUID.fromString(UUID_CHARACTERISTIC_NOTIFY));
+                    if (notifyCharacteristic != null) {
+                       BleUtils.setCharacteristicNotification(gatt, notifyCharacteristic, true);
                     }
                 }
             }

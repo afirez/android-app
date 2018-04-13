@@ -1,8 +1,8 @@
-package com.afirez.ble.scan;
+package com.afirez.libble.scan;
 
 import android.bluetooth.BluetoothDevice;
 
-import com.afirez.ble.LiteBle;
+import com.afirez.libble.LiteBle;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -25,7 +25,7 @@ public abstract class MacTimeoutLeScanCallback extends TimeoutLeScanCallback {
         if (!aHasFound.get()) {
             if (device.getAddress().equalsIgnoreCase(mac)) {
                 aHasFound.set(true);
-                LiteBle liteBle = getLiteBle();
+                LiteBle liteBle = getLiteBle  ();
                 if (liteBle != null) {
                     liteBle.stopLeScan(MacTimeoutLeScanCallback.this);
                     onDeviceFound(device, rssi, scanRecord);

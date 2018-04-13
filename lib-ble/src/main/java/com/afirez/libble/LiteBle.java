@@ -1,4 +1,4 @@
-package com.afirez.ble;
+package com.afirez.libble;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -14,8 +14,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.afirez.ble.scan.MacTimeoutLeScanCallback;
-import com.afirez.ble.scan.TimeoutLeScanCallback;
+import com.afirez.libble.scan.MacTimeoutLeScanCallback;
+import com.afirez.libble.scan.TimeoutLeScanCallback;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
