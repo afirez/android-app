@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.afirez.libble.scan.MacTimeoutLeScanCallback;
 import com.afirez.libble.scan.TimeoutLeScanCallback;
@@ -33,8 +34,9 @@ public class LiteBle {
     public static final int STATE_DISCONNECTED = 0;
     public static final int STATE_SCANNING = 1;
     public static final int STATE_CONNECTING = 2;
-    public static final int STATE_CONNECTED = 3;
-    public static final int STATE_SERVICES_DISCOVERED = 4;
+    public static final int STATE_CONNECT_FAILURE = 3;
+    public static final int STATE_CONNECTED = 4;
+    public static final int STATE_SERVICES_DISCOVERED = 5;
 
     private volatile int connectionState = STATE_DISCONNECTED;
 
@@ -97,14 +99,44 @@ public class LiteBle {
         this.gatt = gatt;
     }
 
-    private Set<BluetoothGattCallback> gattCallbacks = new LinkedHashSet<>();
+    private static final int CALLBACK_CORE = 0;
+    private static final int CALLBACK_CONNECT = 1;
+    private static final int CALLBACK_DISCOVERY = CALLBACK_CONNECT;
+    private static final int CALLBACK_CHARACTERISTIC_CHANGED = 3;
+    private static final int CALLBACK_CHARACTERISTIC_READ = 4;
+    private static final int CALLBACK_CHARACTERISTIC_WRITE = 5;
+    private static final int CALLBACK_DESCRIPTOR_READ = 6;
+    private static final int CALLBACK_DESCRIPTOR_WRITE = 7;
+    private static final int CALLBACK_RELIABLE_WRITE = 8;
+    private static final int CALLBACK_RSSI_READ = 9;
+    private static final int CALLBACK_PHY_UPDATE = 10;
+    private static final int CALLBACK_PHY_READ = 11;
+    private static final int CALLBACK_MTU_CHANGE = 12;
 
-    public boolean addGattCallBack(BluetoothGattCallback gattCallback) {
-        return gattCallbacks.add(gattCallback);
+    private final SparseArray<Set<BluetoothGattCallback>> callbacksMap = new SparseArray<>();
+
+    public boolean addCallBack(int callbackType, BluetoothGattCallback callback) {
+        boolean result;
+        synchronized (callbacksMap) {
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(callbackType);
+            if (gattCallbacks == null) {
+                gattCallbacks = new LinkedHashSet<>();
+            }
+            result = gattCallbacks.add(callback);
+        }
+        return result;
     }
 
-    public boolean removeGattCallback(BluetoothGattCallback gattCallback) {
-        return gattCallbacks.remove(gattCallback);
+    public synchronized boolean removeCallback(int callbackType, BluetoothGattCallback callback) {
+        boolean result;
+        synchronized (callbacksMap) {
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(callbackType);
+            if (gattCallbacks == null) {
+                gattCallbacks = new LinkedHashSet<>();
+            }
+            result = gattCallbacks.remove(callback);
+        }
+        return result;
     }
 
     public boolean isScanning() {
@@ -112,7 +144,11 @@ public class LiteBle {
     }
 
     public boolean isConnectingOrConnected() {
-        return connectionState >= STATE_CONNECTING;
+        return connectionState >= STATE_CONNECTING && connectionState != STATE_CONNECT_FAILURE;
+    }
+
+    public boolean isConnectFailed() {
+        return connectionState == STATE_CONNECT_FAILURE;
     }
 
     public boolean isConnected() {
@@ -123,16 +159,20 @@ public class LiteBle {
         return connectionState == STATE_SERVICES_DISCOVERED;
     }
 
-    private BluetoothGattCallback coreGattCallbalk = new BluetoothGattCallback() {
+    private BluetoothGattCallback dispatcherGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (newState == BluetoothGatt.STATE_CONNECTED) {
-                connectionState = STATE_CONNECTED;
-                LiteBle.this.onConnected(gatt, status);
-            } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
-                connectionState = STATE_DISCONNECTED;
-                LiteBle.this.onDisconnected(gatt, status);
+            //local dispatch
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_CONNECT);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onConnectionStateChange(gatt, status, newState);
+                    }
+                }
             }
+            //global dispatch
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -144,7 +184,15 @@ public class LiteBle {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            LiteBle.this.onServicesDiscovered(gatt, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_DISCOVERY);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onServicesDiscovered(gatt, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -159,7 +207,15 @@ public class LiteBle {
                 BluetoothGatt gatt,
                 BluetoothGattCharacteristic characteristic,
                 int status) {
-            LiteBle.this.onCharacteristicRead(gatt, characteristic, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_CHARACTERISTIC_READ);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onCharacteristicRead(gatt, characteristic, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -174,7 +230,15 @@ public class LiteBle {
                 BluetoothGatt gatt,
                 BluetoothGattCharacteristic characteristic,
                 int status) {
-            LiteBle.this.onCharacteristicWrite(gatt, characteristic, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_CHARACTERISTIC_WRITE);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onCharacteristicWrite(gatt, characteristic, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -188,7 +252,15 @@ public class LiteBle {
         public void onCharacteristicChanged(
                 BluetoothGatt gatt,
                 BluetoothGattCharacteristic characteristic) {
-            LiteBle.this.onCharacteristicChanged(gatt, characteristic);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_CHARACTERISTIC_CHANGED);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onCharacteristicChanged(gatt, characteristic);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -200,7 +272,15 @@ public class LiteBle {
 
         @Override
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            LiteBle.this.onDescriptorRead(gatt, descriptor, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_DESCRIPTOR_READ);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onDescriptorRead(gatt, descriptor, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -212,7 +292,15 @@ public class LiteBle {
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            LiteBle.this.onDescriptorWrite(gatt, descriptor, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_DESCRIPTOR_WRITE);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onDescriptorWrite(gatt, descriptor, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -224,7 +312,15 @@ public class LiteBle {
 
         @Override
         public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
-            LiteBle.this.onReliableWriteCompleted(gatt, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_RELIABLE_WRITE);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onReliableWriteCompleted(gatt, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -236,7 +332,15 @@ public class LiteBle {
 
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            LiteBle.this.onReadRemoteRssi(gatt, rssi, status);
+            Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_RSSI_READ);
+            if (callbacks != null && callbacks.size() != 0) {
+                for (BluetoothGattCallback callback : callbacks) {
+                    if (callback != null) {
+                        callback.onReadRemoteRssi(gatt, rssi, status);
+                    }
+                }
+            }
+            Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
             if (gattCallbacks != null && gattCallbacks.size() != 0) {
                 for (BluetoothGattCallback gattCallback : gattCallbacks) {
                     if (gattCallback != null) {
@@ -249,7 +353,15 @@ public class LiteBle {
         @Override
         public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             if (Build.VERSION.SDK_INT >= 26) {
-                LiteBle.this.onPhyUpdate(gatt, txPhy, rxPhy, status);
+                Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_PHY_UPDATE);
+                if (callbacks != null && callbacks.size() != 0) {
+                    for (BluetoothGattCallback callback : callbacks) {
+                        if (callback != null) {
+                            callback.onPhyUpdate(gatt, txPhy, rxPhy, status);
+                        }
+                    }
+                }
+                Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
                 if (gattCallbacks != null && gattCallbacks.size() != 0) {
                     for (BluetoothGattCallback gattCallback : gattCallbacks) {
                         if (gattCallback != null) {
@@ -263,7 +375,15 @@ public class LiteBle {
         @Override
         public void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
             if (Build.VERSION.SDK_INT >= 26) {
-                LiteBle.this.onPhyRead(gatt, txPhy, rxPhy, status);
+                Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_PHY_READ);
+                if (callbacks != null && callbacks.size() != 0) {
+                    for (BluetoothGattCallback callback : callbacks) {
+                        if (callback != null) {
+                            callback.onPhyRead(gatt, txPhy, rxPhy, status);
+                        }
+                    }
+                }
+                Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
                 if (gattCallbacks != null && gattCallbacks.size() != 0) {
                     for (BluetoothGattCallback gattCallback : gattCallbacks) {
                         if (gattCallback != null) {
@@ -277,7 +397,15 @@ public class LiteBle {
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             if (Build.VERSION.SDK_INT >= 21) {
-                LiteBle.this.onMtuChanged(gatt, mtu, status);
+                Set<BluetoothGattCallback> callbacks = callbacksMap.get(CALLBACK_PHY_READ);
+                if (callbacks != null && callbacks.size() != 0) {
+                    for (BluetoothGattCallback callback : callbacks) {
+                        if (callback != null) {
+                            callback.onMtuChanged(gatt, mtu, status);
+                        }
+                    }
+                }
+                Set<BluetoothGattCallback> gattCallbacks = callbacksMap.get(CALLBACK_CORE);
                 if (gattCallbacks != null && gattCallbacks.size() != 0) {
                     for (BluetoothGattCallback gattCallback : gattCallbacks) {
                         if (gattCallback != null) {
@@ -288,58 +416,6 @@ public class LiteBle {
             }
         }
     };
-
-    private void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
-
-    }
-
-    private void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
-
-    }
-
-    private void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
-
-    }
-
-    private void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-
-    }
-
-    private void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
-
-    }
-
-    private void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-
-    }
-
-    private void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-
-    }
-
-    private void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-
-    }
-
-    private void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-
-    }
-
-    private void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-
-    }
-
-    private void onServicesDiscovered(BluetoothGatt gatt, int status) {
-
-    }
-
-    private void onDisconnected(BluetoothGatt gatt, int status) {
-
-    }
-
-    private void onConnected(BluetoothGatt gatt, int status) {
-
-    }
 
     public boolean startLeScan(BluetoothAdapter.LeScanCallback scanCallback) {
         if (scanCallback == null) {
@@ -382,15 +458,19 @@ public class LiteBle {
     public synchronized BluetoothGatt connect(
             BluetoothDevice device,
             boolean autoConnect,
-            BluetoothGattCallback gattCallback) {
-        gattCallbacks.add(gattCallback);
-        return device.connectGatt(context, autoConnect, coreGattCallbalk);
+            BluetoothGattCallback connectCallback) {
+        Set<BluetoothGattCallback> connectCallbacks = callbacksMap.get(CALLBACK_CONNECT);
+        if (connectCallbacks == null) {
+            connectCallbacks = new LinkedHashSet<>();
+        }
+        connectCallbacks.add(connectCallback);
+        return device.connectGatt(context, autoConnect, dispatcherGattCallback);
     }
 
     public boolean scanAndConnect(
             String mac,
             final boolean autoConnect,
-            final BluetoothGattCallback gattCallback) {
+            final BluetoothGattCallback connectCallback) {
         if (!BluetoothAdapter.checkBluetoothAddress(mac)) {
             return false;
         }
@@ -400,15 +480,15 @@ public class LiteBle {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        connect(device, autoConnect, gattCallback);
+                        connect(device, autoConnect, connectCallback);
                     }
                 });
             }
 
             @Override
             public void onLeScanTimeout() {
-                if (gattCallback != null) {
-                    gattCallback.onConnectionStateChange(gatt, BluetoothGatt.GATT_SUCCESS, BluetoothGatt.STATE_DISCONNECTED);
+                if (dispatcherGattCallback != null) {
+                    dispatcherGattCallback.onConnectionStateChange(gatt, BluetoothGatt.GATT_FAILURE, BluetoothGatt.STATE_DISCONNECTED);
                 }
             }
         });
