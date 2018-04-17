@@ -1,4 +1,4 @@
-﻿package com.arcsoft.sdk_demo.sample;
+package com.arcsoft.sdk_demo.sample;
 
 import android.graphics.Rect;
 import android.util.Log;
