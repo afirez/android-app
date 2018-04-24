@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
                     continue;
                 }
                 if (name.toUpperCase().startsWith(FILTER)) {
-                    targetDevice = device;
-                    return true;
+                    removeBond(device);
+                    return false;
                 }
             }
         }
@@ -178,9 +178,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (bluetoothAdapter != null && bluetoothAdapter.isDiscovering()) {
                                     bluetoothAdapter.cancelDiscovery();
                                 }
-                                targetDevice = device;
                                 createBond(device);
-                                onDeviceInitialized();
                             }
                         }
                     }
@@ -199,12 +197,16 @@ public class MainActivity extends AppCompatActivity {
                     switch (device.getBondState()) {
                         case BluetoothDevice.BOND_NONE:
                             Log.d(TAG, "BOND_NONE: ");
+                            targetDevice = null;
+                            onDeviceInitialized();
                             break;
                         case BluetoothDevice.BOND_BONDING:
                             Log.d(TAG, "BOND_BONDING: ");
                             break;
                         case BluetoothDevice.BOND_BONDED:
                             Log.d(TAG, "BOND_BONDED: ");
+                            targetDevice = device;
+                            onDeviceInitialized();
                             break;
                     }
                     break;

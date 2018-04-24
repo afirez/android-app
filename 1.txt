@@ -1,5 +1,0 @@
---------- beginning of /dev/log/system
---------- beginning of /dev/log/main
-I/MyBle   (13454): onConnectionStateChange: thread:Binder_1false
-I/MyBle   (13454): 连接已断开
-I/MyBle   (13454): connectGatt: thread: ble
