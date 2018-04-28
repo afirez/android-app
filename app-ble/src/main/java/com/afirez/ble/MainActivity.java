@@ -25,6 +25,7 @@ import com.afirez.libble.BleUtils;
 import com.afirez.libble.HexString;
 
 import java.lang.reflect.Field;
+import java.util.Random;
 import java.util.UUID;
 
 import static com.afirez.ble.Constant.UUID_CHARACTERISTIC_NOTIFY;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter adapter;
     private EditText etAddress;
+    private BloodPressureSurfaceView svBloodPressure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,25 @@ public class MainActivity extends AppCompatActivity {
                 startScan();
             }
         });
+        svBloodPressure = (BloodPressureSurfaceView) findViewById(R.id.ble_sv_blood_pressure);
+        new Thread() {
+            @Override
+            public void run() {
+                Random random = new Random();
+                while (mRunning && !Thread.currentThread().isInterrupted()) {
+                    svBloodPressure.setTargetValue(random.nextInt(300));
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+        //欢迎使用西恩智能医生
     }
+
+    private boolean mRunning = true;
 
     private void connectDevice(String address) {
         if (!BluetoothAdapter.checkBluetoothAddress(address)) {
@@ -293,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                 if (service != null) {
                     BluetoothGattCharacteristic notifyCharacteristic = service.getCharacteristic(UUID.fromString(UUID_CHARACTERISTIC_NOTIFY));
                     if (notifyCharacteristic != null) {
-                       BleUtils.setCharacteristicNotification(gatt, notifyCharacteristic, true);
+                        BleUtils.setCharacteristicNotification(gatt, notifyCharacteristic, true);
                     }
                 }
             }
@@ -320,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mRunning = false;
         if (bleHandler != null) {
             bleHandler.removeCallbacksAndMessages(null);
         }
