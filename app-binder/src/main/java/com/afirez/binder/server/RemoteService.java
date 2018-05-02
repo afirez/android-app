@@ -39,6 +39,12 @@ public class RemoteService extends Service {
         return bookManager;
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind: " + Thread.currentThread().getName());
+        return super.onUnbind(intent);
+    }
+
     private final IBookManagerStub bookManager = new IBookManagerStub() {
 
         @Override

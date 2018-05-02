@@ -29,7 +29,7 @@ public class ClientFragment extends Fragment {
 
     private volatile IBookManager iBookManager;
 
-    private CountDownLatch latch;
+    private volatile CountDownLatch latch;
 
     public ClientFragment() {
         setRetainInstance(true);
