@@ -25,15 +25,15 @@ import io.reactivex.subjects.PublishSubject;
 
 public class RxLife<T> implements ObservableTransformer<T, T>, LifecycleObserver {
 
-    public static <T> ObservableTransformer<T, T> resumed(LifecycleOwner owner) {
+    public static <T> ObservableTransformer<T, T> ensureResumed(LifecycleOwner owner) {
         return new RxLife<>(owner, Lifecycle.State.RESUMED);
     }
 
-    public static <T> ObservableTransformer<T, T> started(LifecycleOwner owner) {
+    public static <T> ObservableTransformer<T, T> ensureStarted(LifecycleOwner owner) {
         return new RxLife<>(owner, Lifecycle.State.STARTED);
     }
 
-    public static <T> ObservableTransformer<T, T> created(LifecycleOwner owner) {
+    public static <T> ObservableTransformer<T, T> ensureCreated(LifecycleOwner owner) {
         return new RxLife<>(owner, Lifecycle.State.CREATED);
     }
 
@@ -143,7 +143,7 @@ public class RxLife<T> implements ObservableTransformer<T, T>, LifecycleObserver
 
     private static void assertMainThread() {
         if (!isMainThread()) {
-            throw new IllegalStateException("should not use Live Transformer at a background thread");
+            throw new IllegalStateException("should not use RxLife Transformer at a background thread");
         }
     }
 

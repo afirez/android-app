@@ -1,9 +1,12 @@
-apply plugin: 'com.android.library'
+rootProject.canRunAlone[project.getName()]
+
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
+        applicationId "com.afirez.log"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
@@ -26,14 +29,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
-
-//    compile "android.arch.persistence.room:runtime:$rootProject.roomVersion"
-//    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
-//    compile "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
-//    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "com.android.support.test:runner:$rootProject.runnerVersion"

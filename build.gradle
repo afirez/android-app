@@ -26,6 +26,14 @@ task clean(type: Delete) {
 
 // Define versions in a single place
 ext {
+
+    canRunAlone = [
+    ]
+    childProjects.forEach {
+        'app'.equals(it.getName)
+    }
+
+
     // Sdk and tools
     // Support library and architecture components support minSdk 14 and above.
     minSdkVersion = 14
@@ -35,6 +43,7 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '27.1.1'
+    constraintVersion = '1.1.0'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
     powerMockito = '1.6.2'
@@ -42,6 +51,11 @@ ext {
     runnerVersion = '1.0.1'
     rulesVersion = '1.0.1'
     espressoVersion = '3.0.1'
+    timberVersion = '4.7.0'
+
+    //Rx
+    rxjavaVersion = '2.1.13'
+    rxandroidVersion = '2.0.2'
 
     // Architecture Components dependencies
     roomVersion = "1.0.0"
