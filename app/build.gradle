@@ -7,41 +7,78 @@ if (canRunAlone.toBoolean()) {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
+    useLibrary 'org.apache.http.legacy'
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
-        applicationId "com.afirez.app"
-        minSdkVersion 14
-        targetSdkVersion 27
+        if (canRunAlone.toBoolean()) {
+            applicationId "com.afirez.app"
+        }
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner rootProject.ext.android["AndroidJUnitRunner"]
+
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = [moduleName: project.getName()]
+//            }
+//        }
     }
 
     sourceSets {
         main {
             if (canRunAlone.toBoolean()) {
-                manifest.srcFile 'src/main/AndroidManifest.xml'
+                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+                java
             } else {
-                manifest.srcFile 'src/main/LibManifest.xml'
+                manifest.srcFile 'src/main/AndroidManifest.xml'
             }
         }
     }
 
     buildTypes {
-        release {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "USE_CANARY", "true"
+            buildConfigField "boolean", "CAN_RUN_ALONE", "${canRunAlone}"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        release {
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "boolean", "USE_CANARY", "false"
+            buildConfigField "boolean", "CAN_RUN_ALONE", "${canRunAlone}"
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        disable "ResourceType"
+        abortOnError false
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile(rootProject.ext.dependencies["espresso-core"], {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
-    testCompile 'junit:junit:4.12'
+    compile rootProject.ext.dependencies["appcompat-v7"]
+    compile rootProject.ext.dependencies["constraint-layout"]
+
+    testCompile rootProject.ext.dependencies["junit"]
 }
