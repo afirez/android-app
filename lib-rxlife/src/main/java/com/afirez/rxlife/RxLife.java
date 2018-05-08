@@ -1,8 +1,5 @@
 package com.afirez.rxlife;
 
-/**
- * Created by afirez on 18-5-2.
- */
 
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -20,7 +17,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.subjects.PublishSubject;
 
 /**
- * Created by danbogh on 2017/9/6.
+ * Created by afirez on 2017/9/6.
  */
 
 public class RxLife<T> implements ObservableTransformer<T, T>, LifecycleObserver {
