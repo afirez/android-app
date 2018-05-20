@@ -1,1 +1,1 @@
-include ':app', ':app-media-player', ':app-mp3-player', ':app-video-player', ':app-audio', ':app-camera', ':lib-zxing', ':app-zxing', ':app-audio-wav', ':app-face', ':app-face-arc'
+include ':app', ':app-media-player', ':app-mp3-player', ':app-video-player', ':app-audio', ':app-camera', ':lib-zxing', ':app-zxing', ':app-audio-wav', ':app-face', ':app-face-arc', ':app-mp3-lame'
