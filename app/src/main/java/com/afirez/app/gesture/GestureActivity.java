@@ -117,6 +117,7 @@ public class GestureActivity extends AppCompatActivity {
                     }
                     mAttributes.screenBrightness = newBrightness;
                     mWindow.setAttributes(mAttributes);
+                    mBrightnessHelper.setSystemBrightness((int) (newBrightness * 255));
 
                     mIvIndicator.setImageResource(R.drawable.brightness_w);
                     mPbProgress.setProgress((int) (newBrightness * 100));
