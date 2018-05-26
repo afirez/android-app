@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 /**
- * Created by lenovo on 2018/3/14.
+ * Created by afirez on 2018/3/14.
  */
 
 public class PreviewHelper implements SurfaceHolder.Callback {
