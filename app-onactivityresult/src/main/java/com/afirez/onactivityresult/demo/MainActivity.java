@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private Disposable disposable;
 
     public void onRxJava(View view) {
+        if (disposable != null) {
+            disposable.dispose();
+        }
         disposable = onResultHelper.startActivityForResult(FetchDataActivity.class)
                 .subscribe(new Consumer<OnResultHelper.Result>() {
                     @Override
