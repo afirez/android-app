@@ -92,3 +92,73 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
+task helloWorld(type: GreetingTask) {
+    doFirst {
+        println "do First helloWorld"
+        def list = getActions()
+        for (int i = 0; i < list.size(); i++) {
+            println list.get(i).displayName
+        }
+    }
+
+    doLast {
+        println "do Last helloWorld"
+    }
+
+    println "Hello World"
+}
+
+task greeting(type: GreetingTask) {
+
+    greeting = 'greetings from GreetingTask'
+
+    doFirst {
+        println "do First greeting"
+    }
+
+    doLast {
+        println "do Last greeting"
+    }
+}
+
+class GreetingTask extends  DefaultTask {
+    String greeting = 'hello from GreetingTask'
+
+    @TaskAction
+    def greet() {
+        println greeting
+    }
+}
+
+task installAndRun(dependsOn: 'assembleDebug') {
+    doFirst {
+        exec {
+            workingDir "${buildDir}/outputs/apk/debug"
+            commandLine 'adb', 'install', '-r', 'app-debug.apk'
+        }
+        exec {
+            def path = "${buildDir}/intermediates/manifests/full/debug/AndroidManifest.xml"
+            // xml 解析
+            def parser = new XmlParser(false, false).parse(new File(path))
+            // application 下的每一个 activity 结点
+            parser.application.activity.each { activity ->
+                // activity 下的每一个 intent-filter 结点
+                activity.'intent-filter'.each { filter ->
+                    // intent-filter 下的 action 结点中的 @android:name 包含 android.intent.action.MAIN
+                    if (filter.action.@"android:name".contains("android.intent.action.MAIN")) {
+                        def targetActivity = activity.@"android:name"
+                        commandLine 'adb', 'shell', 'am', 'start', '-n',
+                                "${android.defaultConfig.applicationId}/${targetActivity}"
+                    }
+                }
+            }
+        }
+    }
+}
+
+task showInstallDepends {
+    doFirst {
+        println project.tasks.findByName("installDebug").dependsOn
+    }
+}
