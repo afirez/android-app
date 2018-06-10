@@ -1,6 +1,5 @@
 # Dagger2 入门系列 1 之 @Inject 与 @Component
 
-
 二话不说，我反手就是一个。。。
 > Dagger2 是一个依赖注入框架。
 
@@ -61,7 +60,7 @@ public interface InjectComponentComponent {
 
 ## 4. 在 AS 中选择菜单 build -> Make Project
 
-![AS 编译后将生成 3 个 源文件] (arts/dagger-make.png)
+![AS 编译后将生成 3 个 源文件] (https://raw.githubusercontent.com/afirez/android-app/master/arts/dagger-a-make.png)
 
 AS 编译后将生成 3 个 源文件:
   1. DaggerInjectComponentComponent
@@ -98,7 +97,7 @@ public class InjectComponentActivity extends AppCompatActivity {
 
 ## 6. 运行
 
-![运行效果图] (arts/dagger-a-run.png)
+![运行效果图] (https://raw.githubusercontent.com/afirez/android-app/master/arts/dagger-a-run.png)
 
 感觉和 ButterKnife.bind(this) 一样啊， 这么帅的吗？So easy！不行，我要试试了。。。
 
