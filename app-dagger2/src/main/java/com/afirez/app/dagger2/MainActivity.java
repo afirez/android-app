@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afirez.app.dagger2.a_inject_component.InjectComponentActivity;
+import com.afirez.app.dagger2.b_module.ModuleActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
 
     public void helloWorldOnClick(View view) {
         Toast.makeText(this, "Hello World!", Toast.LENGTH_SHORT).show();
@@ -26,4 +26,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void moduleOnClick(View view) {
+        Intent intent = new Intent(this, ModuleActivity.class);
+        startActivity(intent);
+    }
 }

@@ -37,6 +37,13 @@
                 android:layout_height="wrap_content"
                 android:text="Inject , Component"
                 android:textAllCaps="false" />
+            <Button
+                android:id="@+id/dagger_btn_module"
+                android:onClick="moduleOnClick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Module"
+                android:textAllCaps="false" />
         </LinearLayout>
     </ScrollView>
 
