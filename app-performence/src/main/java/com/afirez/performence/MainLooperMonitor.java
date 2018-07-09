@@ -68,10 +68,10 @@ public class MainLooperMonitor {
         public void run() {
             StringBuilder sb = new StringBuilder();
             StackTraceElement[] stackTrace = Looper.getMainLooper().getThread().getStackTrace();
-            for (int i = stackTrace.length - 1; i >= 0; i--) {
-                sb.append(stackTrace[i]).append("\n");
+            for (StackTraceElement ste : stackTrace) {
+                sb.append(ste).append("\n");
             }
-            System.out.println("MainLooperMonitor:" + sb.toString());
+            Log.e(TAG, sb.toString());
             try {
                 dumpCrashToSdcard(sb.toString());
             } catch (IOException e) {
