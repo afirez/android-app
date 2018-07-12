@@ -1,5 +1,16 @@
 ext {
 
+    canRunAlone = true
+
+    baseUrls = [
+            "debug"  : "\"http://118.31.238.207:8080/ZZB/\"",
+//"debug"  : "\"http://192.168.200.107:8080/ZZB/\"",
+//            "debug": "\"http://116.62.36.12:8080/ZZB/\"",
+            "release"  : "\"http://118.31.238.207:8080/ZZB/\"",
+//            "release": "\"http://116.62.36.12:8080/ZZB/\""
+//"release": "\"http://192.168.200.107:8080/ZZB/\""
+    ]
+
     android = [
             compileSdkVersion: 27,
             buildToolsVersion: "27.0.3",
@@ -11,7 +22,8 @@ ext {
 
     version = [
             androidSupportSdkVersion: "27.1.1",
-            constraintLayoutVersion: "1.1.0",
+            androidArchSdkVersion : "1.0.0",
+            constraintLayoutVersion: "1.1.2",
             retrofitSdkVersion      : "2.4.0",
             dagger2SdkVersion       : "2.15",
             glideSdkVersion         : "4.6.1",
@@ -20,10 +32,6 @@ ext {
             rxlifecycle2SdkVersion  : "2.2.1",
             espressoSdkVersion      : "3.0.2",
             canarySdkVersion        : "1.5.4",
-
-            // Architecture Components dependencies
-            roomVersion : "1.0.0",
-            archLifecycleVersion : "1.0.0-rc1",
     ]
 
     dependencies = [
@@ -48,6 +56,11 @@ ext {
             "glide-compiler"           : "com.github.bumptech.glide:compiler:${version["glideSdkVersion"]}",
             "glide-loader-okhttp3"     : "com.github.bumptech.glide:okhttp3-integration:${version["glideSdkVersion"]}",
             "picasso"                  : "com.squareup.picasso:picasso:2.5.2",
+
+            "room-runtime"             : "android.arch.persistence.room:runtime:${version["androidArchSdkVersion"]}",
+            "room-compiler"            : "android.arch.persistence.room:compiler:${version["androidArchSdkVersion"]}",
+            "room-testing"             : "android.arch.persistence.room:testing:${version["androidArchSdkVersion"]}",
+            "room-rxjava2"             : "android.arch.persistence.room:rxjava2:${version["androidArchSdkVersion"]}",
 
             //view
             "autolayout"               : "com.zhy:autolayout:1.4.5",

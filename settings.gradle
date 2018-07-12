@@ -1,1 +1,1 @@
-include ':app', ':lib-rxlife', ':app-log', ':lib-common-life', ':app-dagger2', ':lib-common'
+include ':app', ':lib-rxlife', ':app-log', ':lib-common-life', ':app-dagger2', ':lib-common', ':lib-common-repository', ':lib-common-repository'
