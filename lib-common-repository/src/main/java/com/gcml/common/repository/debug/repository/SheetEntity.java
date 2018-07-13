@@ -1,13 +1,17 @@
-package com.gcml.common.repository.debug;
+package com.gcml.common.repository.debug.repository;
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by afirez on 18-2-6.
  */
-
+@Entity(tableName = "Sheet")
 public class SheetEntity {
 
+    @PrimaryKey
     @SerializedName("mid")
     private int id;           //歌单id
     @SerializedName("mname")

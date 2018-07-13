@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         if (canRunAlone.toBoolean()) {
-            applicationId "com.ml.common.repository"
+            applicationId "com.gcml.common.repository"
         }
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
@@ -76,11 +76,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation rootProject.ext.dependencies["appcompat-v7"]
+    implementation rootProject.ext.dependencies["constraint-layout"]
+
     implementation rootProject.ext.dependencies["rxjava2"]
     implementation rootProject.ext.dependencies["rxandroid2"]
 
     implementation rootProject.ext.dependencies["dagger2"]
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
 
     implementation rootProject.ext.dependencies["retrofit"]
@@ -94,12 +95,9 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies["room-compiler"]
     implementation rootProject.ext.dependencies["room-rxjava2"]
 
-//    compile "android.arch.persistence.room:runtime:$rootProject.roomVersion"
-//    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
-//    compile "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
-//    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
-
     implementation rootProject.ext.dependencies["timber"]
+    implementation rootProject.ext.dependencies["stetho"]
+    implementation rootProject.ext.dependencies["stetho-okhttp3"]
     testImplementation rootProject.ext.dependencies["junit"]
     androidTestImplementation rootProject.ext.dependencies["runner"]
     androidTestImplementation rootProject.ext.dependencies["espresso-core"]

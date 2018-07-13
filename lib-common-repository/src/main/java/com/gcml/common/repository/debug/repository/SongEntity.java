@@ -1,4 +1,4 @@
-package com.gcml.common.repository.debug;
+package com.gcml.common.repository.debug.repository;
 
 import com.google.gson.annotations.SerializedName;
 

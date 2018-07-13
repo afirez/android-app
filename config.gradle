@@ -124,7 +124,9 @@ ext {
             "logger"                   : "com.orhanobut:logger:2.2.0",
             "canary-debug"             : "com.squareup.leakcanary:leakcanary-android:${version["canarySdkVersion"]}",
             "canary-release"           : "com.squareup.leakcanary:leakcanary-android-no-op:${version["canarySdkVersion"]}",
-            "umeng-analytics"          : "com.umeng.analytics:analytics:6.0.1"
+            "umeng-analytics"          : "com.umeng.analytics:analytics:6.0.1",
+            "stetho"                   : "com.facebook.stetho:stetho:1.5.0",
+            "stetho-okhttp3"           : "com.facebook.stetho:stetho-okhttp3:1.5.0"
     ]
 
 }

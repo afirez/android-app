@@ -14,7 +14,7 @@ public class DefaultObserver<T> extends DisposableObserver<T> {
 
     @Override
     public void onError(Throwable throwable) {
-
+        throwable.printStackTrace();
     }
 
     @Override

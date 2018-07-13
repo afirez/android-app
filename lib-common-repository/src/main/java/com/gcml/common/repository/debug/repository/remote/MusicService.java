@@ -1,5 +1,7 @@
-package com.gcml.common.repository.debug;
+package com.gcml.common.repository.debug.repository.remote;
 
+import com.gcml.common.repository.debug.repository.SheetEntity;
+import com.gcml.common.repository.debug.repository.SongEntity;
 import com.gcml.common.repository.http.ApiResult;
 
 import java.util.List;

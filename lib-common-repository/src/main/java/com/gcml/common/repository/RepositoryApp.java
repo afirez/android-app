@@ -3,6 +3,8 @@ package com.gcml.common.repository;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.gcml.common.repository.cache.Cache;
 import com.gcml.common.repository.cache.LruCache;
 import com.gcml.common.repository.di.ClientModule;
@@ -40,6 +42,7 @@ public enum RepositoryApp implements IRepositoryApp {
     }
 
     public void onCreate(Application application) {
+        Stetho.initializeWithDefaults(application);
         this.mApplication = application;
         if (mRepositoryModule == null) {
             mRepositoryModule = new RepositoryModule(mApplication);
@@ -111,7 +114,9 @@ public enum RepositoryApp implements IRepositoryApp {
                     .okhttpConfiguration((context1, okHttpBuilder) -> {
                         //支持 Https
                         //okHttpBuilder.sslSocketFactory()
-                        okHttpBuilder.writeTimeout(10, TimeUnit.SECONDS);
+                        okHttpBuilder
+                                .addNetworkInterceptor(new StethoInterceptor())
+                                .writeTimeout(10, TimeUnit.SECONDS);
                     })
                     //这里可以自己自定义配置 RxCache 的参数
                     .rxCacheConfiguration((context1, rxCacheBuilder) -> {
