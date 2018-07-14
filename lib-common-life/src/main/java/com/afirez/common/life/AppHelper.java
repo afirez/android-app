@@ -194,7 +194,7 @@ public final class AppHelper {
      * @return 前台 Activity
      */
     public Activity getCurrentActivity() {
-        return mCurrentActivity != null ? mCurrentActivity : null;
+        return mCurrentActivity;
     }
 
     /**
