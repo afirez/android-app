@@ -5,7 +5,7 @@ import android.content.Context;
 
 public interface AppLifecycleCallbacks {
 
-    void attachBaseContext(Context base);
+    void attachBaseContext(Application app, Context base);
 
     void onCreate(Application app);
 

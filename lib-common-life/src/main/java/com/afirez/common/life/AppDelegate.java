@@ -20,7 +20,7 @@ public class AppDelegate implements AppLifecycleCallbacks {
     }
 
     @Override
-    public void attachBaseContext(Context base) {
+    public void attachBaseContext(Application app, Context base) {
 
 
     }

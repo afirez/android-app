@@ -7,7 +7,7 @@ public class BaseApp extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        AppDelegate.getInstance().attachBaseContext(base);
+        AppDelegate.getInstance().attachBaseContext(this,base);
     }
 
     @Override
