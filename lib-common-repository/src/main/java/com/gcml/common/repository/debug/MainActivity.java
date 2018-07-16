@@ -16,6 +16,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -23,7 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
 
     private MusicRepository mMusicRepository;
-    private Disposable mDisposable;
+    private Disposable mDisposable = Disposables.empty();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +35,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onNetwork(View view) {
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
+        mDisposable.dispose();
         Observable<List<SheetEntity>> listObservable = mMusicRepository.sheetListFromApi("", 1, 12);
         mDisposable = listObservable
                 .subscribeOn(Schedulers.io())
@@ -70,9 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onNetworkAndWriteDb(View view) {
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
+        mDisposable.dispose();
         Observable<List<SheetEntity>> listObservable = mMusicRepository.sheetListFromApiAndSaveDb("", 1, 12);
         mDisposable = listObservable
                 .subscribeOn(Schedulers.io())
@@ -106,9 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onReadDb(View view) {
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
+        mDisposable.dispose();
         Observable<List<SheetEntity>> listObservable = mMusicRepository.sheetListFromDb();
         mDisposable = listObservable
                 .subscribeOn(Schedulers.io())
@@ -142,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onDeleteDb(View view) {
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
+        mDisposable.dispose();
         Observable<Object> listObservable = mMusicRepository.deleteAllSheetsFromDb();
         mDisposable = listObservable
                 .subscribeOn(Schedulers.io())
@@ -180,9 +173,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
+        mDisposable.dispose();
     }
 }
 

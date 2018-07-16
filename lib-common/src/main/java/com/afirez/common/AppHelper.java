@@ -1,4 +1,4 @@
-package com.afirez.common.life;
+package com.afirez.common;
 
 import android.app.Activity;
 import android.app.Application;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import com.afirez.common.lifecycle.AppLifecycleCallbacks;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -417,7 +419,7 @@ public final class AppHelper {
 
     public interface AppMessageSubscriber {
         /**
-         * 扩展 AppHelper 的远程遥控功能
+         * AppHelper 全局 Message 监听
          *
          * @param appHelper AppHelper
          * @param message    Message

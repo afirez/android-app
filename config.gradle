@@ -22,8 +22,8 @@ ext {
 
     version = [
             androidSupportSdkVersion: "27.1.1",
-            androidArchSdkVersion : "1.0.0",
-            constraintLayoutVersion: "1.1.2",
+            androidArchSdkVersion   : "1.0.0",
+            constraintLayoutVersion : "1.1.2",
             retrofitSdkVersion      : "2.4.0",
             dagger2SdkVersion       : "2.15",
             glideSdkVersion         : "4.6.1",

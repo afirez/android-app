@@ -28,12 +28,11 @@ public enum RepositoryApp implements IRepositoryApp {
     INSTANCE;
 
     private Application mApplication;
-    private List<RepositoryConfigModule.Configuration> mConfigurations;
+    private final List<RepositoryConfigModule.Configuration> mConfigurations = new ArrayList<>();
     private RepositoryComponent mRepositoryComponent;
     private RepositoryModule mRepositoryModule;
 
     RepositoryApp() {
-        mConfigurations = new ArrayList<>();
         mConfigurations.add(new Configuration());
     }
 
@@ -66,7 +65,6 @@ public enum RepositoryApp implements IRepositoryApp {
     public void onTerminate(Application application) {
         this.mRepositoryModule = null;
         this.mRepositoryComponent = null;
-        this.mConfigurations = null;
         this.mApplication = null;
     }
 

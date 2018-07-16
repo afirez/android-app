@@ -1,24 +1,29 @@
-package com.afirez.common.life;
+package com.afirez.common.lifecycle;
 
 import android.app.Application;
 import android.content.Context;
 
-public class BaseApp extends Application {
+/**
+ * Created by afirez on 2018/6/15.
+ */
+
+public class App extends Application {
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        AppDelegate.getInstance().attachBaseContext(this,base);
+        AppDelegate.INSTANCE.attachBaseContext(this, base);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        AppDelegate.getInstance().onCreate(this);
+        AppDelegate.INSTANCE.onCreate(this);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        AppDelegate.getInstance().onTerminate(this);
+        AppDelegate.INSTANCE.onTerminate(this);
     }
 }

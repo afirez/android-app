@@ -1,7 +1,12 @@
 package com.afirez.log;
 
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+
+import com.bumptech.glide.Glide;
 
 import timber.log.Timber;
 
@@ -10,38 +15,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.tag("MainActivity");
-        Timber.d("onCreate");
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            Fragment fragment = new MainFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, fragment, MainFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Timber.d("onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Timber.d("onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Timber.d("onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Timber.d("onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Timber.d("onDestroy");
+    public void onHello(View view) {
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.setClassName("com.antutu.ABenchMark", "com.antutu.ABenchMark.ABenchMarkStart");
+        startActivity(intent);
     }
 }
