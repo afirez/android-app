@@ -99,8 +99,7 @@ public final class AppHelper {
 
     /**
      * 提供给外部扩展 AppHelper 的 @{@link #onAppMessage} 方法(远程遥控 AppHelper 的功能)
-     * 建议在 {@link ConfigLifecycle#injectAppLifecycle(Context, List)} 中
-     * 通过 {@link AppLifecycles#onCreate(Application)} 在 App 初始化时,使用此方法传入自定义的 {@link AppMessageSubscriber}
+     * 通过 {@link AppLifecycleCallbacks#onCreate(Application)} 在 App 初始化时,使用此方法传入自定义的 {@link AppMessageSubscriber}
      *
      * @param appMessageSubscriber AppMessageSubscriber
      */
