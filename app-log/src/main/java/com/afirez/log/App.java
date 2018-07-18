@@ -6,7 +6,7 @@ import android.content.Context;
 import com.afirez.common.lifecycle.AppDelegate;
 
 /**
- * Created by lenovo on 2018/5/3.
+ * Created by afirez on 2018/5/3.
  */
 
 public class App extends Application {

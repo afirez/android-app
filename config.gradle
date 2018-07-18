@@ -31,7 +31,8 @@ ext {
             rxlifecycleSdkVersion   : "1.0",
             rxlifecycle2SdkVersion  : "2.2.1",
             espressoSdkVersion      : "3.0.2",
-            canarySdkVersion        : "1.5.4",
+            leakCanarySdkVersion    : "1.5.4",
+            blockCanarySdkVersion    : "1.5.0",
     ]
 
     dependencies = [
@@ -122,8 +123,12 @@ ext {
             "mockito-core"             : "org.mockito:mockito-core:1.+",
             "timber"                   : "com.jakewharton.timber:timber:4.7.0",
             "logger"                   : "com.orhanobut:logger:2.2.0",
-            "canary-debug"             : "com.squareup.leakcanary:leakcanary-android:${version["canarySdkVersion"]}",
-            "canary-release"           : "com.squareup.leakcanary:leakcanary-android-no-op:${version["canarySdkVersion"]}",
+            "leakCanary-debug"         : "com.squareup.leakcanary:leakcanary-android:${version["leakCanarySdkVersion"]}",
+            "leakCanary-release"       : "com.squareup.leakcanary:leakcanary-android-no-op:${version["leakCanarySdkVersion"]}",
+            "blockCanary-debug"        : "com.github.markzhai:blockcanary-android:${version["blockCanarySdkVersion"]}",
+            "blockCanary-release"      : "com.github.markzhai:blockcanary-no-op:${version["blockCanarySdkVersion"]}",
+            "bugly-crashreport"        : "com.tencent.bugly:crashreport:latest.release",
+            "bugly-nativecrashreport"  : "com.tencent.bugly:nativecrashreport:latest.release",
             "umeng-analytics"          : "com.umeng.analytics:analytics:6.0.1",
             "stetho"                   : "com.facebook.stetho:stetho:1.5.0",
             "stetho-okhttp3"           : "com.facebook.stetho:stetho-okhttp3:1.5.0"

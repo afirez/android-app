@@ -67,7 +67,7 @@ public final class ManifestParser<T> {
         try {
             clazz = Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Unable to find object implementation " + className, e);
+            throw new IllegalArgumentException("Unable to find implementation " + className, e);
         }
 
         Object obj = null;
@@ -88,11 +88,11 @@ public final class ManifestParser<T> {
             return (T) obj;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalStateException("Unexpected value " + className + " for " + mMetaDataValue);
+            throw new IllegalStateException("Unexpected implementation: " + className + " for " + mMetaDataValue);
         }
     }
 
     private static void throwInstantiateException(Class<?> clazz, Exception e) {
-        throw new RuntimeException("Unable to instantiate object implementation for " + clazz, e);
+        throw new RuntimeException("Unable to instantiate implementation: " + clazz, e);
     }
 }
