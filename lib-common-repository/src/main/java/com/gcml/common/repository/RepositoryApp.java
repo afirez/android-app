@@ -36,6 +36,10 @@ public enum RepositoryApp implements IRepositoryApp {
         mConfigurations.add(new Configuration());
     }
 
+    public Application app() {
+        return mApplication;
+    }
+
     public void attachBaseContext(Application application, Context base) {
 
     }

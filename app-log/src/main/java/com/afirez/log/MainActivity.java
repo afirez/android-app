@@ -5,7 +5,9 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.tencent.bugly.crashreport.CrashReport;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,19 +24,9 @@ public class MainActivity extends AppCompatActivity {
 //                    .addToBackStack(null)
 //                    .commitAllowingStateLoss();
 //        }
-
-//        SystemClock.sleep(2000);
-//        Singleton.getInstance(this);
+        Singleton.getInstance(this);
     }
 
-    public void onHello(View view) {
-//        CrashReport.testJavaCrash();
-//        CrashReport.testNativeCrash();
-        CrashReport.testANRCrash();
-//        Intent intent = new Intent();
-//        intent.setClassName("com.ludashi.benchmarkhd", "com.ludashi.benchmarkhd.MainActivity");
-//        startActivity(intent);
-    }
 
     @Override
     public void onBackPressed() {
@@ -43,5 +35,29 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    public void onLeaks(View view) {
+        Toast.makeText(this, "旋转屏幕试试", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onBlocks(View view) {
+        Toast.makeText(this, "点我就对了", Toast.LENGTH_SHORT).show();
+        SystemClock.sleep(2000);
+    }
+
+    public void onJavaCrash(View view) {
+        Toast.makeText(this, "10 秒中后去撩撩 Bugly 呗", Toast.LENGTH_SHORT).show();
+        CrashReport.testJavaCrash();
+    }
+
+    public void onNdkCrash(View view) {
+        Toast.makeText(this, "10 秒中后去撩撩 Bugly 呗", Toast.LENGTH_SHORT).show();
+        CrashReport.testNativeCrash();
+    }
+
+    public void onAnr(View view) {
+        Toast.makeText(this, "10 秒中后去撩撩 Bugly 呗", Toast.LENGTH_SHORT).show();
+        CrashReport.testANRCrash();
     }
 }

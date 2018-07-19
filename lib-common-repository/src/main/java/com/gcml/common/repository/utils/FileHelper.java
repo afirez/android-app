@@ -85,11 +85,18 @@ public class FileHelper {
         return contentBuilder.toString();
     }
 
+    public static File makeDirs(File file) {
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
     public static boolean exists(File file) {
         return file.exists();
     }
 
-    public boolean clearDirectory(File directory) {
+    public static boolean clearDirectory(File directory) {
         if (directory == null
                 || !directory.exists()
                 || !directory.isDirectory()) {

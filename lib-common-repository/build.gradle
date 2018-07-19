@@ -48,7 +48,7 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
             buildConfigField "boolean", "USE_CANARY", "false"
             buildConfigField "boolean", "CAN_RUN_ALONE", "${canRunAlone}"
-            buildConfigField "String", "BASE_URL",  rootProject.ext.baseUrls["release"]
+            buildConfigField "String", "BASE_URL", rootProject.ext.baseUrls["release"]
             minifyEnabled false
             shrinkResources false
             zipAlignEnabled true
@@ -78,6 +78,8 @@ dependencies {
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["constraint-layout"]
 
+    implementation project(":lib-common")
+
     implementation rootProject.ext.dependencies["rxjava2"]
     implementation rootProject.ext.dependencies["rxandroid2"]
 
@@ -94,6 +96,9 @@ dependencies {
     implementation rootProject.ext.dependencies["room-runtime"]
     annotationProcessor rootProject.ext.dependencies["room-compiler"]
     implementation rootProject.ext.dependencies["room-rxjava2"]
+
+    implementation rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glide-compiler"]
 
     implementation rootProject.ext.dependencies["timber"]
     implementation rootProject.ext.dependencies["stetho"]

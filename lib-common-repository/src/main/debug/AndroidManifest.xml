@@ -22,6 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.gcml.common.repository.imageloader.glide.GlideImageLoader"
+            android:value="ImageLoader"/>
     </application>
 
 </manifest>
