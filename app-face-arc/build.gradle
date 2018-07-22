@@ -29,4 +29,6 @@ dependencies {
     implementation files('libs/ageestimation.jar')
     implementation files('libs/genderestimation.jar')
     implementation 'com.guo.android_extend:android-extend:1.0.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 }

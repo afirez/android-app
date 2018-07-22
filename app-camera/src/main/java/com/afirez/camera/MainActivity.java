@@ -1,14 +1,17 @@
 package com.afirez.camera;
 
 import android.content.res.Configuration;
-import android.graphics.Canvas;
 import android.hardware.Camera;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.util.Pools;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 
 /**
  * 相机使用步骤:
@@ -41,26 +44,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
         setContentView(R.layout.activity_main);
         initView();
-        mCameraId = CameraUtils.getCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
-        mCamera = CameraUtils.openById(mCameraId);
+        cameraHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mCameraId = CameraUtils.getCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+                mCamera = CameraUtils.openById(mCameraId);
+                configCamera();
+                CameraUtils.startPreview(mCamera, mSurfaceHolder);
+            }
+        });
     }
 
     private void initView() {
         svPreview = (SurfaceView) findViewById(R.id.camera_sv_preview);
         SurfaceHolder surfaceHolder = svPreview.getHolder();
-        if (surfaceHolder != null) {
-            surfaceHolder.addCallback(mSurfaceCallback);
-        }
+        surfaceHolder.addCallback(mSurfaceCallback);
     }
 
     public void onTvSwitchCamera(View view) {
-        CameraUtils.close(mCamera);
-        mCameraId = 1 - mCameraId;
-        mCamera = CameraUtils.openById(mCameraId);
-        configCamera();
-        CameraUtils.startPreview(mCamera, mSurfaceHolder);
+        cameraHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                CameraUtils.close(mCamera);
+                mCameraId = 1 - mCameraId;
+                mCamera = CameraUtils.openById(mCameraId);
+                configCamera();
+                CameraUtils.startPreview(mCamera, mSurfaceHolder);
+            }
+        });
     }
 
     public void onTvCameraMirror(View view) {
@@ -68,11 +85,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTvStartCameraPreview(View view) {
-        CameraUtils.startPreview(mCamera, mSurfaceHolder);
+        cameraHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                CameraUtils.startPreview(mCamera, mSurfaceHolder);
+            }
+        });
     }
 
     public void onTvStopCameraPreview(View view) {
-        CameraUtils.stopPreview(mCamera);
+        cameraHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                CameraUtils.stopPreview(mCamera);
+            }
+        });
     }
 
     public void onTvSetCameraPreviewCallback(View view) {
@@ -88,27 +115,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTvAddCameraCallbackBuffer(View view) {
-        CameraUtils.addCallbackBuffer(mCamera, getBuffer());
+        CameraUtils.addCallbackBuffer(mCamera, obtainBuffer());
     }
 
-    // 3110400
-    private volatile byte[] mBuffer;
+    /**
+     * 设置预览回调时，setPreviewCallback 和 setOneShotPreviewCallback 都存在内存抖动，
+     * 使用 setPreviewCallbackWithBuffer 加 addCallbackBuffer 的方式获取预览图像时，
+     * 如果频繁创建 buffer 也会导致内存抖动， 这是可以用对象池优化。
+     */
+    private Pools.Pool<byte[]> mBufferPool = new Pools.SynchronizedPool<>(6);
 
-    public byte[] getBuffer() {
-        if (mBuffer == null) {
-            int size = CameraUtils.calculateBufferSize(mCamera);
-            mBuffer = new byte[size];
+    public byte[] obtainBuffer() {
+        byte[] buffer = mBufferPool.acquire();
+        int bufferSize = CameraUtils.calculateBufferSize(mCamera);
+        if (buffer == null || buffer.length != bufferSize) {
+            buffer = new byte[bufferSize];
+            Log.d("camera", "getBuffer: size : " + buffer.length);
         }
-        Log.d("camera", "getBuffer: size : " + mBuffer.length);
-        return mBuffer;
+        return buffer;
+    }
+
+    public void recycleBuffer(byte[] buffer) {
+        try {
+            mBufferPool.release(buffer);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private Camera.PreviewCallback mPreviewCallback = new Camera.PreviewCallback() {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
-            Log.d("camera", "onPreviewFrame: ");
-            Log.d("camera", "mBuffer: " + getBuffer());
-            Log.d("camera", "data: " + data);
+            Log.d("camera", "onPreviewFrame: " + Thread.currentThread().getName());
+            recycleBuffer(data);
         }
     };
 
@@ -175,7 +214,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         CameraUtils.close(mCamera);
         mCamera = null;
+        cameraHandler.removeCallbacksAndMessages(null);
+        if (thread != null) {
+            thread.quit();
+            thread = null;
+        }
         super.onDestroy();
     }
 
+
+    private Handler cameraHandler;
+    private HandlerThread thread;
+
+    {
+        thread = new HandlerThread("camera");
+        thread.start();
+        cameraHandler = new Handler(thread.getLooper());
+    }
 }

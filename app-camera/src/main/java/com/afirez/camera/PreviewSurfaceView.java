@@ -50,9 +50,6 @@ public class PreviewSurfaceView extends SurfaceView
     }
 
     public void setCamera(Camera camera) {
-        if (camera == null) {
-            Log.d(TAG, "setCamera (camera == null)");
-        }
         mCamera = camera;
     }
 }
