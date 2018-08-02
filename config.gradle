@@ -14,7 +14,7 @@ ext {
     android = [
             compileSdkVersion: 27,
             buildToolsVersion: "27.0.3",
-            minSdkVersion    : 16,
+            minSdkVersion    : 19,
             targetSdkVersion : 27,
             versionCode      : 1,
             versionName      : "1.0.0"
@@ -112,6 +112,7 @@ ext {
             "progressmanager"          : "me.jessyan:progressmanager:1.5.0",
             "retrofit-url-manager"     : "me.jessyan:retrofit-url-manager:1.2.5",
             "lifecyclemodel"           : "me.jessyan:lifecyclemodel:1.0.1",
+            "lombok"                    : "org.projectlombok:lombok:1.18.0",
 
             //test
             "junit"                    : "junit:junit:4.12",

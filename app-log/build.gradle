@@ -80,8 +80,11 @@ dependencies {
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["constraint-layout"]
     implementation rootProject.ext.dependencies["glide"]
+    implementation rootProject.ext.dependencies["rxpermissions2"]
 
     implementation project(":lib-common")
+
+    implementation "com.polidea.rxandroidble2:rxandroidble:1.6.0"
 
     implementation rootProject.ext.dependencies["timber"]
     implementation rootProject.ext.dependencies["bugly-crashreport"]

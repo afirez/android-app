@@ -16,15 +16,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        if (savedInstanceState == null) {
-//            Fragment fragment = new MainFragment();
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .add(android.R.id.content, fragment, MainFragment.class.getName())
-//                    .addToBackStack(null)
-//                    .commitAllowingStateLoss();
-//        }
-        Singleton.getInstance(this);
+        if (savedInstanceState == null) {
+            Fragment fragment = new MainFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, fragment, MainFragment.class.getName())
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss();
+        }
+//        Singleton.getInstance(this);
     }
 
 
