@@ -45,6 +45,9 @@ ext {
             "recyclerview-v7"          : "com.android.support:recyclerview-v7:${version["androidSupportSdkVersion"]}",
             "constraint-layout"        : "com.android.support.constraint:constraint-layout:${version["constraintLayoutVersion"]}",
 
+            //component bus cc
+            "cc"                       : "com.billy.android:cc:1.1.0",
+
             //network
             "retrofit"                 : "com.squareup.retrofit2:retrofit:${version["retrofitSdkVersion"]}",
             "retrofit-converter-gson"  : "com.squareup.retrofit2:converter-gson:${version["retrofitSdkVersion"]}",

@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         if (project.ext.runAsApp) {
-            applicationId "com.afirez.log"
+            applicationId "com.gcml.component.cc"
         }
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
@@ -30,8 +30,6 @@ android {
             abiFilters "armeabi-v7a"
         }
     }
-
-//    resourcePrefix "cc_"
 
     buildTypes {
         debug {
@@ -63,16 +61,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation project(":lib-common-core")
+
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["constraint-layout"]
     implementation rootProject.ext.dependencies["glide"]
     implementation rootProject.ext.dependencies["rxpermissions2"]
-
-    if (project.ext.runAsApp) {
-        implementation project(":lib-common-core")
-    }
-
-    implementation "com.polidea.rxandroidble2:rxandroidble:1.6.0"
 
     implementation rootProject.ext.dependencies["timber"]
     implementation rootProject.ext.dependencies["bugly-crashreport"]
