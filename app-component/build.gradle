@@ -1,5 +1,6 @@
 ext.mainApp = true
-apply from: 'https://raw.githubusercontent.com/luckybilly/CC/master/cc-settings.gradle'
+apply from: rootProject.file('cc-settings.gradle')
+//apply from: 'https://raw.githubusercontent.com/luckybilly/CC/master/cc-settings.gradle'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
@@ -71,6 +72,9 @@ dependencies {
     implementation rootProject.ext.dependencies["design"]
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["constraint-layout"]
+
+//    implementation rootProject.ext.dependencies["autodispose"]
+//    implementation rootProject.ext.dependencies["autodispose-arch"]
 
     implementation rootProject.ext.dependencies["rxjava2"]
     implementation rootProject.ext.dependencies["rxandroid2"]

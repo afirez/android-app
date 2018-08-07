@@ -73,7 +73,7 @@ public class MainFragment extends Fragment {
         rxPermissions = new RxPermissions(getActivity());
         rxBleClient = RxBleClient.create(getActivity());
 //        setRetainInstance(true);
-//        Singleton.getInstance(this);
+//        Singleton.get(this);
     }
 
     private final Timber.Tree tree = new Timber.Tree() {

@@ -1,4 +1,5 @@
-apply from: 'https://raw.githubusercontent.com/luckybilly/CC/master/cc-settings.gradle'
+apply from: rootProject.file('cc-settings.gradle')
+//apply from: 'https://raw.githubusercontent.com/luckybilly/CC/master/cc-settings.gradle'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]

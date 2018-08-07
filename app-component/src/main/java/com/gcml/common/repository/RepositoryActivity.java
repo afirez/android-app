@@ -10,6 +10,7 @@ import com.gcml.common.demo.R;
 import com.gcml.common.repository.entity.SheetEntity;
 import com.gcml.common.repository.imageloader.ImageLoader;
 import com.gcml.common.repository.utils.DefaultObserver;
+import com.gcml.common.utils.RxUtils;
 
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class RepositoryActivity extends AppCompatActivity {
                         Toast.makeText(RepositoryActivity.this, String.valueOf(Looper.myLooper() == Looper.getMainLooper()) + "结束！！！", Toast.LENGTH_SHORT).show();
                     }
                 })
+                .as(RxUtils.autoDisposeConverter(this))
                 .subscribeWith(new DefaultObserver<List<SheetEntity>>() {
                     @Override
                     public void onNext(List<SheetEntity> sheetEntities) {
@@ -87,6 +89,7 @@ public class RepositoryActivity extends AppCompatActivity {
                         Toast.makeText(RepositoryActivity.this, String.valueOf(Looper.myLooper() == Looper.getMainLooper()) + "结束！！！", Toast.LENGTH_SHORT).show();
                     }
                 })
+                .as(RxUtils.autoDisposeConverter(this))
                 .subscribeWith(new DefaultObserver<List<SheetEntity>>() {
                     @Override
                     public void onNext(List<SheetEntity> sheetEntities) {
@@ -121,6 +124,7 @@ public class RepositoryActivity extends AppCompatActivity {
                         Toast.makeText(RepositoryActivity.this, String.valueOf(Looper.myLooper() == Looper.getMainLooper()) + "结束！！！", Toast.LENGTH_SHORT).show();
                     }
                 })
+                .as(RxUtils.autoDisposeConverter(this))
                 .subscribeWith(new DefaultObserver<List<SheetEntity>>() {
                     @Override
                     public void onNext(List<SheetEntity> sheetEntities) {
@@ -155,6 +159,7 @@ public class RepositoryActivity extends AppCompatActivity {
                         Toast.makeText(RepositoryActivity.this, String.valueOf(Looper.myLooper() == Looper.getMainLooper()) + "结束！！！", Toast.LENGTH_SHORT).show();
                     }
                 })
+                .as(RxUtils.autoDisposeConverter(this))
                 .subscribeWith(new DefaultObserver<Object>() {
                     @Override
                     public void onNext(Object o) {

@@ -1,4 +1,5 @@
-apply from: 'https://raw.githubusercontent.com/luckybilly/CC/master/cc-settings.gradle'
+apply from: rootProject.file('cc-settings.gradle')
+//apply from: 'https://raw.githubusercontent.com/luckybilly/CC/master/cc-settings.gradle'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
@@ -68,9 +69,7 @@ dependencies {
     implementation rootProject.ext.dependencies["glide"]
     implementation rootProject.ext.dependencies["rxpermissions2"]
 
-    if (project.ext.runAsApp) {
-        implementation project(":lib-common-core")
-    }
+    implementation project(":lib-common-core")
 
     implementation "com.polidea.rxandroidble2:rxandroidble:1.6.0"
 
