@@ -12,14 +12,14 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MusicService {
-    @GET("rep/sel_music_danforapp")
+    @GET("ZZB/rep/sel_music_danforapp")
     Observable<ApiResult<List<SheetEntity>>> sheets(
             @Query("mname") String name,
             @Query("page") int page,
             @Query("limit") int limit
     );
 
-    @GET("rep/selSomeImitate")
+    @GET("ZZB/rep/selSomeImitate")
     Observable<ApiResult<List<SongEntity>>> songs(
             @Query("type") int type,
             @Query("wr") String singer,

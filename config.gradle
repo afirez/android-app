@@ -32,7 +32,7 @@ ext {
             rxlifecycle2SdkVersion  : "2.2.1",
             espressoSdkVersion      : "3.0.2",
             leakCanarySdkVersion    : "1.5.4",
-            blockCanarySdkVersion    : "1.5.0",
+            blockCanarySdkVersion   : "1.5.0",
     ]
 
     dependencies = [
@@ -98,6 +98,7 @@ ext {
             "rxcache2"                 : "com.github.VictorAlbertos.RxCache:runtime:1.8.3-2.x",
             "rxpermissions2"           : "com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar",
             "rxerrorhandler2"          : "me.jessyan:rxerrorhandler:2.1.1",
+            "rxandroidble2"            : "com.polidea.rxandroidble2:rxandroidble:1.6.0",
 
             //tools
             "dagger2"                  : "com.google.dagger:dagger:${version["dagger2SdkVersion"]}",
@@ -115,7 +116,7 @@ ext {
             "progressmanager"          : "me.jessyan:progressmanager:1.5.0",
             "retrofit-url-manager"     : "me.jessyan:retrofit-url-manager:1.2.5",
             "lifecyclemodel"           : "me.jessyan:lifecyclemodel:1.0.1",
-            "lombok"                    : "org.projectlombok:lombok:1.18.0",
+            "lombok"                   : "org.projectlombok:lombok:1.18.0",
 
             //test
             "junit"                    : "junit:junit:4.12",
