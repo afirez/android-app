@@ -1,17 +1,35 @@
 package com.gcml.common.mvp;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
+
 /**
  * Created by afirez on 2017/7/12.
  */
 
-public interface IPresenter {
-    void onStart();
+public interface IPresenter extends LifecycleObserver {
+    void setLifecycleOwner(LifecycleOwner lifecycleOwner);
 
-    void onResume();
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    void onCreate(LifecycleOwner owner);
 
-    void onPause();
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    void onStart(LifecycleOwner owner);
 
-    void onStop();
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    void onResume(LifecycleOwner owner);
 
-    void onDestroy();
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    void onPause(LifecycleOwner owner);
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    void onStop(LifecycleOwner owner);
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    void onDestroy(LifecycleOwner owner);
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+    void onLifecycleChanged(LifecycleOwner owner, Lifecycle.Event event);
 }

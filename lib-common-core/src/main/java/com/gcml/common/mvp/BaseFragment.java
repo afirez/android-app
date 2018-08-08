@@ -2,9 +2,14 @@ package com.gcml.common.mvp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+
+import com.gcml.common.repository.utils.Preconditions;
+import com.gcml.common.utils.RxUtils;
+import com.uber.autodispose.AutoDisposeConverter;
 
 /**
  * Created by afirez on 2017/7/13.
@@ -14,12 +19,14 @@ public abstract class BaseFragment<V extends IView, P extends IPresenter>
         implements IView, UiFactory<V, P> {
     protected P presenter;
     private V baseView;
+    private BaseActivity baseActivity;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             baseView = (V) context;
+            baseActivity = ((BaseActivity) context);
         } catch (Exception e) {
             throw new RuntimeException("activity must implement IView");
         }
@@ -28,49 +35,15 @@ public abstract class BaseFragment<V extends IView, P extends IPresenter>
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (presenter == null) {
-            presenter = providePresenter(provideView());
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (presenter != null) {
-            presenter.onStart();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (presenter != null) {
-            presenter.onResume();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        if (presenter != null) {
-            presenter.onPause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        if (presenter != null) {
-            presenter.onStop();
-        }
-        super.onStop();
+        presenter = providePresenter(provideView());
+        presenter.setLifecycleOwner(this);
+        getLifecycle().addObserver(presenter);
     }
 
     @Override
     public void onDestroy() {
-        if (presenter != null) {
-            presenter.onDestroy();
-        }
         baseView = null;
+        baseActivity = null;
         super.onDestroy();
     }
 
@@ -102,5 +75,45 @@ public abstract class BaseFragment<V extends IView, P extends IPresenter>
     @Override
     public void showError(String error) {
         baseView.showError(error);
+    }
+
+    protected void addFragment(Fragment fragment, @IdRes int containerId) {
+        if (baseActivity != null) {
+            baseActivity.addFragment(fragment, containerId);
+        }
+    }
+
+    protected void removeFragment(Fragment fragment) {
+        if (baseActivity != null) {
+            baseActivity.removeFragment(fragment);
+        }
+    }
+
+    protected void replaceFragment(Fragment fragment, @IdRes int containerId) {
+        if (baseActivity != null) {
+            baseActivity.replaceFragment(fragment, containerId);
+        }
+    }
+
+    protected void hideFragment(Fragment fragment) {
+        if (baseActivity != null) {
+            baseActivity.hideFragment(fragment);
+        }
+    }
+
+    protected void showFragment(Fragment fragment) {
+        if (baseActivity != null) {
+            baseActivity.showFragment(fragment);
+        }
+    }
+
+    protected void popFragment() {
+        if (baseActivity != null) {
+            baseActivity.popFragment();
+        }
+    }
+
+    public <T> AutoDisposeConverter<T> autoDisposeConverter() {
+        return RxUtils.autoDisposeConverter(this);
     }
 }
