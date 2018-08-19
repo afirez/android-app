@@ -1,15 +1,17 @@
 package com.afirez.app;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.os.MessageQueue;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.afirez.gradle.GradleActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +20,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Looper.myQueue().addIdleHandler(idleHandler);
+        findViewById(R.id.btn_gradle_maven).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onGradleMaven(v);
+            }
+        });
+//        Looper.myQueue().addIdleHandler(idleHandler);
     }
 
     private MessageQueue.IdleHandler idleHandler = new MessageQueue.IdleHandler() {
@@ -89,5 +97,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("idleHandler", "run complete: ");
             }
         },1000);
+    }
+
+    public void onGradleMaven(View view) {
+        Intent intent = new Intent(this, GradleActivity.class);
+        startActivity(intent);
     }
 }
