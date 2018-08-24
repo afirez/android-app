@@ -156,7 +156,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
-
 							mTextView.setAlpha(1.0f);
 							mTextView.setText(mNameShow);
 							mTextView.setTextColor(Color.RED);
@@ -230,6 +229,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 		mSurfaceView.setOnCameraListener(this);
 		mSurfaceView.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, mCameraRotate);
 		mSurfaceView.debug_print_fps(true, false);
+//		mSurfaceView.setVisibility(View.GONE);
 
 		//snap
 		mTextView = (TextView) findViewById(R.id.textView);

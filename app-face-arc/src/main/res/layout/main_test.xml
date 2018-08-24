@@ -40,5 +40,23 @@
             android:text="检测识别" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/LinearLayout3"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/LinearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="afirez."
+            android:textColor="@color/colorAccent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Face Auth" />
+    </LinearLayout>
+
 
 </RelativeLayout>

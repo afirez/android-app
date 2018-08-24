@@ -71,7 +71,7 @@
         android:padding="10dp"
         android:textColor="#00ff00"
         android:onClick="onTvSetCameraPreviewCallback"
-        android:text="set preview callback"
+        android:text="set preview recognizeCallback"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/camera_tv_stop_preview"/>
@@ -83,7 +83,7 @@
         android:padding="10dp"
         android:textColor="#00ff00"
         android:onClick="onTvSetCameraOneShotPreviewCallback"
-        android:text="set one shot preview callback"
+        android:text="set one shot preview recognizeCallback"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/camera_tv_set_preview_callback"/>
@@ -95,7 +95,7 @@
         android:padding="10dp"
         android:textColor="#00ff00"
         android:onClick="onTvSetCameraPreviewCallbackWithBuffer"
-        android:text="set preview callback with buffer"
+        android:text="set preview recognizeCallback with buffer"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/camera_tv_set_one_shot_preview_callback"/>

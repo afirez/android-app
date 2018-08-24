@@ -52,7 +52,12 @@ public class CameraUtils {
             return Camera.open(cameraId);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            try {
+                return Camera.open(cameraId);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return null;
+            }
         }
     }
 
@@ -70,7 +75,6 @@ public class CameraUtils {
 
     public static void followScreenOrientation(Context context, Camera camera) {
         if (context == null || camera == null) {
-            Log.e(TAG, "context == null or camera == null while followScreenOrientation for camera");
             return;
         }
         final int orientation = context.getResources().getConfiguration().orientation;
@@ -87,11 +91,10 @@ public class CameraUtils {
 
     public static void startPreview(Camera camera, SurfaceHolder holder) {
         if (camera == null || holder == null) {
-            Log.e(TAG, "camera == null or holder == null while START preview for camera");
+
             return;
         }
         if (isPreviewing) {
-            Log.e(TAG, "isPreviewing: " + isPreviewing);
             return;
         }
         isPreviewing = true;
@@ -99,15 +102,13 @@ public class CameraUtils {
         try {
             camera.setPreviewDisplay(holder);
             camera.startPreview();
-        } catch (IOException e) {
+        } catch (Throwable e) {
             isPreviewing = false;
-            Log.e(TAG, "Error while START preview for camera", e);
         }
     }
 
     public static void stopPreview(Camera camera) {
         if (camera == null) {
-            Log.e(TAG, "camera == null while START preview for camera");
             return;
         }
         isPreviewing = false;
@@ -115,16 +116,14 @@ public class CameraUtils {
             camera.stopPreview();
             camera.setPreviewDisplay(null);
         } catch (Exception e) {
-            Log.e(TAG, "Error while STOP preview for camera", e);
+            e.printStackTrace();
         }
     }
 
     public static void setPreviewCallback(Camera camera, Camera.PreviewCallback previewCallback) {
         if (camera == null) {
-            Log.e(TAG, "camera == null while setOneShotPreviewCallback for camera");
             return;
         }
-        Log.e(TAG, "previewCallback: " + previewCallback);
         try {
             camera.setPreviewCallback(previewCallback);
         } catch (Throwable e) {
@@ -134,10 +133,8 @@ public class CameraUtils {
 
     public static void setOneShotPreviewCallback(Camera camera, Camera.PreviewCallback previewCallback) {
         if (camera == null) {
-            Log.e(TAG, "camera == null while setOneShotPreviewCallback for camera");
             return;
         }
-        Log.e(TAG, "previewCallback: " + previewCallback);
         try {
             camera.setOneShotPreviewCallback(previewCallback);
         } catch (Throwable e) {
@@ -147,10 +144,8 @@ public class CameraUtils {
 
     public static void setPreviewCallbackWithBuffer(Camera camera, Camera.PreviewCallback previewCallback) {
         if (camera == null) {
-            Log.e(TAG, "camera == null while setOneShotPreviewCallback for camera");
             return;
         }
-        Log.e(TAG, "previewCallback: " + previewCallback);
         try {
             camera.setPreviewCallbackWithBuffer(previewCallback);
         } catch (Throwable e) {
@@ -160,10 +155,8 @@ public class CameraUtils {
 
     public static void addCallbackBuffer(Camera camera, byte[] buffer) {
         if (camera == null) {
-            Log.e(TAG, "camera == null while addCallbackBuffer for camera");
             return;
         }
-        Log.e(TAG, "addCallbackBuffer: " + buffer);
         try {
             camera.addCallbackBuffer(buffer);
         } catch (Throwable e) {

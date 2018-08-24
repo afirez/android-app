@@ -15,6 +15,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "file:///Users/afirez/Downloads/repo/" }
         jcenter()
         google()
     }

@@ -23,29 +23,22 @@ public class PreviewHelper implements SurfaceHolder.Callback {
     private SurfaceHolder mSurfaceHolder;
 
     public void setCamera(Camera camera) {
-        if (camera == null) {
-            Log.d(TAG, "setCamera (camera == null)");
-        }
         mCamera = camera;
     }
 
     public void setSurfaceHolder(SurfaceHolder surfaceHolder) {
-        if (surfaceHolder == null) {
-            Log.d(TAG, "setSurfaceHolder (surfaceHolder == null)");
-        }
         mSurfaceHolder = surfaceHolder;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d(TAG, "surfaceCreated -> startPreview");
         CameraUtils.startPreview(mCamera, holder);
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         if (mSurfaceHolder.getSurface() == null) {
-            Log.d(TAG, "surfaceChanged -> restartPreview failed (surface == null)");
+            // surfaceChanged -> restartPreview failed
             return;
         }
         Log.d(TAG, "surfaceChanged -> restartPreview success");
