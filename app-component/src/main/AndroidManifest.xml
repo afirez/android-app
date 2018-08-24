@@ -43,6 +43,8 @@
         <meta-data
             android:name="com.gcml.common.app.quality.AppFragmentLifecycleCallbacks"
             android:value="FragmentLifecycleCallbacks" />
+
+        <activity android:name="com.gcml.common.mvvm.MvvmActivity"></activity>
     </application>
 
 </manifest>

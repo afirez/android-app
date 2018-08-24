@@ -6,7 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.afirez.common.lifecycle.AppLifecycleCallbacks;
+
+import com.gcml.common.app.lifecycle.AppLifecycleCallbacks;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.github.moduth.blockcanary.BlockCanaryContext;
 import com.github.moduth.blockcanary.internal.BlockInfo;

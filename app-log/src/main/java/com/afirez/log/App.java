@@ -3,7 +3,8 @@ package com.afirez.log;
 import android.app.Application;
 import android.content.Context;
 
-import com.afirez.common.lifecycle.AppDelegate;
+import com.gcml.common.app.lifecycle.AppDelegate;
+
 
 /**
  * Created by afirez on 2018/5/3.

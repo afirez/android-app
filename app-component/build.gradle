@@ -30,6 +30,10 @@ android {
 //        }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         debug {
             buildConfigField "boolean", "LOG_DEBUG", "true"
@@ -62,6 +66,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     addComponent 'component-cc' //会默认添加依赖：project(':demo_component_a')
 //    addComponent 'demo_component_kt', project(':demo_component_kt') //module方式
 //    addComponent 'demo_component_b', 'com.billy.demo:demo_b:1.1.0'  //maven方式

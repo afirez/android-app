@@ -5,24 +5,32 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.lang.reflect.ParameterizedType;
 
-public abstract class BaseActivity<B extends ViewDataBinding, VM extends AndroidViewModel> extends AppCompatActivity {
+public abstract class BaseFragment<B extends ViewDataBinding, VM extends AndroidViewModel> extends Fragment {
 
     protected B binding;
 
     protected VM viewModel;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, layoutId());
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, layoutId(), container, false);
         viewModel = initViewModel();
         binding.setVariable(variableId(), viewModel);
         initView(savedInstanceState);
+        return binding.getRoot();
     }
 
     protected VM initViewModel() {
@@ -36,4 +44,5 @@ public abstract class BaseActivity<B extends ViewDataBinding, VM extends Android
     protected abstract int variableId();
 
     protected abstract void initView(Bundle savedInstanceState);
+
 }
