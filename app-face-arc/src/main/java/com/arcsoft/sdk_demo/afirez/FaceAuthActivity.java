@@ -102,7 +102,6 @@ public class FaceAuthActivity extends AppCompatActivity {
             }
             task.post(data);
         }
-
     };
 
     private FrameTask task;

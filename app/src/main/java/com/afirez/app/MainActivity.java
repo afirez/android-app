@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.afirez.gradle.GradleActivity;
+//import com.afirez.gradle.GradleActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGradleMaven(View view) {
-        Intent intent = new Intent(this, GradleActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, GradleActivity.class);
+//        startActivity(intent);
     }
 }
