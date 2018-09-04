@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.afirez.app.R;
 
+import java.util.concurrent.Callable;
+
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -16,6 +18,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.internal.functions.ObjectHelper;
 import io.reactivex.schedulers.Schedulers;
 
 public class Rxjava0Activity extends AppCompatActivity {
@@ -30,6 +33,18 @@ public class Rxjava0Activity extends AppCompatActivity {
     }
 
     public void onRxJava0(View view) {
+        Observable.fromCallable(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                return new Object();
+            }
+        }).subscribe();
+        Observable.defer(new Callable<ObservableSource<?>>() {
+            @Override
+            public ObservableSource<?> call() throws Exception {
+                return Observable.empty();
+            }
+        }).subscribe();
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
