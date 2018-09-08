@@ -39,12 +39,19 @@ Java_com_afirez_app_face_detection_FaceDetection_detect(
 
     LOGI("[4] face detection");
     std::vector<Rect> faces;
-    classifier.detectMultiScale(grayMat, faces, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, Size(30, 30));
+    classifier.detectMultiScale(grayMat, faces, 1.1, 3, 0 | CV_HAAR_SCALE_IMAGE, Size(30, 30));
     LOGI("   face detected: has %d face", faces.size());
     if (faces.size() == 1) {
         Rect face = faces[0];
         LOGI("    draw face rectangle: [ x = %d, y = %d, width = %d , height = %d ]", face.x,
              face.y, face.width, face.height);
+        circle(
+                mat,
+                Point(face.x + face.width / 2, face.y + face.height / 2),
+                face.width /2,
+                Scalar(0, 255, 0),
+                8
+        );
         rectangle(mat, face, Scalar(0, 255, 0));
         rectangle(mat,
                   Point(face.x, face.y),

@@ -9,9 +9,11 @@ import android.os.MessageQueue;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afirez.gradle.GradleActivity;
+import com.bumptech.glide.Glide;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
                 onGradleMaven(v);
             }
         });
+
+        Glide.with(this)
+                .load("http://oyptcv2pb.bkt.clouddn.com/abc_1530069151305")
+                .into((ImageView) findViewById(R.id.iv_image));
 //        Looper.myQueue().addIdleHandler(idleHandler);
     }
 
