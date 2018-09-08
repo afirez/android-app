@@ -18,9 +18,9 @@ import android.view.WindowManager;
  * 1. 打开相机
  * 2. 预览相机
  * 3. 设置预览回调
- * 1. setPreviewCallback
- * 2. setOneShotPreviewCallback
- * 3. setPreviewCallbackWithBuffer / addCallbackBuffer
+ * - setPreviewCallback
+ * - setOneShotPreviewCallback
+ * - setPreviewCallbackWithBuffer / addCallbackBuffer
  * 4. 预览回调数据处理
  * <p>
  * 注意：
