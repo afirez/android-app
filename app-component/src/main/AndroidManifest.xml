@@ -44,7 +44,9 @@
             android:name="com.gcml.common.app.quality.AppFragmentLifecycleCallbacks"
             android:value="FragmentLifecycleCallbacks" />
 
-        <activity android:name="com.gcml.common.mvvm.MvvmActivity"></activity>
+        <activity android:name="com.gcml.common.mvvm.MvvmActivity" />
+        <activity android:name="com.gcml.common.uicall.SecondActivity" />
+        <activity android:name="com.gcml.common.uicall.FmActivity"></activity>
     </application>
 
 </manifest>

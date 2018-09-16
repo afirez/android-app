@@ -190,7 +190,7 @@ public class RepositoryActivity extends AppCompatActivity {
                 .callback(new ImageLoader.Callback() {
                     @Override
                     public void onSuccess() {
-                        Timber.i("onSuccess");
+                        Timber.i("success");
                     }
 
                     @Override

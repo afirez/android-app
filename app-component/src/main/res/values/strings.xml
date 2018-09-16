@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">app-common-core</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="first_fragment">first fragment</string>
+    <string name="second_fragment">second fragment</string>
 </resources>

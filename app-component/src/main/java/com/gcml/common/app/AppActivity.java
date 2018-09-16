@@ -50,5 +50,4 @@ public class AppActivity extends AppCompatActivity {
         Toast.makeText(this, "10 秒中后去撩撩 Bugly 呗", Toast.LENGTH_SHORT).show();
         CrashReport.testANRCrash();
     }
-
 }

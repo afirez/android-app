@@ -4,4 +4,5 @@ include ':app',
         ':lib-common-core',
         ':app-component',
         ':xf-speech',
+        ':lib-rxui',
         ':component-cc'

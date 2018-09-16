@@ -34,5 +34,11 @@
             android:layout_height="wrap_content"
             android:onClick="onMvvm"
             android:text="Mvvm Activity" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onUiCall"
+            android:text="Ui Call" />
     </LinearLayout>
 </ScrollView>
