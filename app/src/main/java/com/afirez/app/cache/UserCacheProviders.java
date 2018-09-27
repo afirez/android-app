@@ -15,11 +15,10 @@ import io.rx_cache2.ProviderKey;
  */
 
 public interface UserCacheProviders {
-    @ProviderKey("users")
+    @ProviderKey("user")
     Observable<User> getUser(
             Observable<User> user,
-            DynamicKey userName,
-            EvictDynamicKey evictDynamicKey
+            EvictProvider evictProvider
     );
 
     @ProviderKey("users")

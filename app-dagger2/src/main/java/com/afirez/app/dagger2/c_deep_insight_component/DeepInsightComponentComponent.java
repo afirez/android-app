@@ -7,5 +7,5 @@ import dagger.Component;
  */
 
 @Component
-public interface DeepInsightComponentCompoent {
+public interface DeepInsightComponentComponent {
 }

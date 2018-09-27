@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.afirez.app.dagger2.a_inject_component.InjectComponentActivity;
 import com.afirez.app.dagger2.b_module.ModuleActivity;
+import com.afirez.app.dagger2.c_deep_insight_component.DeepInsightComponentActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void moduleOnClick(View view) {
         Intent intent = new Intent(this, ModuleActivity.class);
+        startActivity(intent);
+    }
+
+    public void deepInsightOnClick(View view) {
+        Intent intent = new Intent(this, DeepInsightComponentActivity.class);
         startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.afirez.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.afirez.app.cache.RxCacheActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -136,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
 //        hanoi(3, 'A', 'B', 'C');
 
-//        Intent intent = new Intent(this, RxCacheActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, RxCacheActivity.class);
+        startActivity(intent);
     }
 
     private void hanoi(int n, char x, char y, char z) {

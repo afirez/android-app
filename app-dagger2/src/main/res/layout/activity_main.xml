@@ -44,6 +44,13 @@
                 android:layout_height="wrap_content"
                 android:text="Module"
                 android:textAllCaps="false" />
+            <Button
+                android:id="@+id/dagger_btn_deep_insight"
+                android:onClick="deepInsightOnClick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="deep Insight"
+                android:textAllCaps="false" />
         </LinearLayout>
     </ScrollView>
 

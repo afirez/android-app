@@ -99,7 +99,7 @@ public class InjectComponentActivity extends AppCompatActivity {
 
 ![运行效果图](https://raw.githubusercontent.com/afirez/android-app/master/arts/dagger-a-run.png)
 
-感觉和 ButterKnife.bind(this) 一样啊， 这么帅的吗？So easy！不行，我要试试了。。。
+感觉和 ButterKnife.bind(this) 一样啊， 这么帅的吗？So easy！不行，我要试试。。。
 
 ## 7. 为什么用 Dagger2
 
@@ -116,4 +116,4 @@ public class InjectComponentActivity extends AppCompatActivity {
 > 5. 当我们写的代码越来越复杂，依赖关系也将越来越复杂，不用 Dagger 不用依赖注入框架，就不那么容易维护了。相信老司机的你肯定感触很深。。。
 > 6. 之所以选 Dagger2 作为依赖注入框架，是咱大 Google 接手 Dagger 后，对 dagger 进行了优化，减少了反射代码，用代码生成的方式代替，性能更佳。
 
-好了，这个解释 so easy 吧，如果还有问题，老哥，吐血 ing.jpg ...
+好了，这个解释 so easy 吧，如果还有问题，老哥，xxx.jpg ...
