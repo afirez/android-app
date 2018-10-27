@@ -9,8 +9,6 @@ import android.widget.Toast;
 import com.afirez.app.R;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,76 +27,6 @@ public class RxCacheActivity extends AppCompatActivity {
     }
 
     private CompositeDisposable disposables = new CompositeDisposable();
-
-    private void rxCache() {
-        Observable<User> rxUser;
-        rxUser = Observable.create(emitter -> {
-            User value = new User();
-            value.name = "user1";
-            value.login = "login";
-            emitter.onNext(value);
-            emitter.onComplete();
-        });
-
-        Disposable disposable;
-        disposable = rxUser
-                .compose(upstream -> CacheHelper.getUserCache().getUser(upstream, new EvictProvider(true)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(user -> {
-                    Log.i("user", user.toString());
-                    Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
-                }, Throwable::printStackTrace);
-        disposables.add(disposable);
-
-        Observable<List<User>> rxUsers = Observable.create(emitter -> {
-            ArrayList<User> users = new ArrayList<>();
-            User value = new User();
-            value.name = "user2";
-            value.login = "login";
-            users.add(value);
-            value = new User();
-            value.name = "user3";
-            value.login = "login";
-            users.add(value);
-            emitter.onNext(users);
-            emitter.onComplete();
-        });
-
-        disposable = rxUsers
-                .compose(upstream -> CacheHelper.getUserCache().getUsers(upstream, new EvictProvider(true)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(users -> {
-                    Log.i("user", users.toString());
-                    Toast.makeText(this, users.toString(), Toast.LENGTH_SHORT).show();
-                }, Throwable::printStackTrace);
-        disposables.add(disposable);
-    }
-
-    @Override
-    protected void onResume() {
-        File cacheDir = CacheHelper.rxCacheDir;
-        if (cacheDir != null) {
-            String[] strings = cacheDir.list();
-            for (String string : strings) {
-                Log.d("cacheFiles", "onResume: " + string);
-            }
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (disposables != null && !disposables.isDisposed()) {
-            disposables.dispose();
-        }
-    }
-
-    public void onRxCache(View view) {
-        rxCache();
-    }
 
     public void onSaveCache(View view) {
         Disposable disposable;
@@ -123,8 +51,7 @@ public class RxCacheActivity extends AppCompatActivity {
                             Toast.makeText(this, "onSaveCache: " + e, Toast.LENGTH_SHORT).show();
                         },
                         () -> {
-                            Log.i("user", "onSaveCache: complete" );
-                            Toast.makeText(this, "onSaveCache: complete", Toast.LENGTH_SHORT).show();
+                            Log.i("user", "onSaveCache: complete");
                         }
                 );
         disposables.add(disposable);
@@ -134,6 +61,7 @@ public class RxCacheActivity extends AppCompatActivity {
         Disposable disposable;
         disposable = Observable.<User>error(new RuntimeException())
                 .compose(upstream -> CacheHelper.getUserCache().getUser(upstream, new EvictProvider(true)))
+                .onErrorResumeNext(Observable.empty())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -146,7 +74,7 @@ public class RxCacheActivity extends AppCompatActivity {
                             Toast.makeText(this, "onDeleteCache: " + e, Toast.LENGTH_SHORT).show();
                         },
                         () -> {
-                            Log.i("user", "onDeleteCache: complete" );
+                            Log.i("user", "onDeleteCache: complete");
                             Toast.makeText(this, "onDeleteCache: complete", Toast.LENGTH_SHORT).show();
                         }
                 );
@@ -176,8 +104,7 @@ public class RxCacheActivity extends AppCompatActivity {
                             Toast.makeText(this, "onUpdateCache: " + e, Toast.LENGTH_SHORT).show();
                         },
                         () -> {
-                            Log.i("user", "onUpdateCache: complete" );
-                            Toast.makeText(this, "onUpdateCache: complete", Toast.LENGTH_SHORT).show();
+                            Log.i("user", "onUpdateCache: complete");
                         }
                 );
         disposables.add(disposable);
@@ -187,6 +114,7 @@ public class RxCacheActivity extends AppCompatActivity {
         Disposable disposable;
         disposable = Observable.<User>empty()
                 .compose(upstream -> CacheHelper.getUserCache().getUser(upstream, new EvictProvider(false)))
+                .firstOrError()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -197,12 +125,28 @@ public class RxCacheActivity extends AppCompatActivity {
                         e -> {
                             Log.i("user", "onFindCache: " + e);
                             Toast.makeText(this, "onFindCache: " + e, Toast.LENGTH_SHORT).show();
-                        },
-                        () -> {
-                            Log.i("user", "onFindCache: complete" );
-                            Toast.makeText(this, "onFindCache: complete", Toast.LENGTH_SHORT).show();
                         }
                 );
         disposables.add(disposable);
+    }
+
+    @Override
+    protected void onResume() {
+        File cacheDir = CacheHelper.rxCacheDir;
+        if (cacheDir != null) {
+            String[] strings = cacheDir.list();
+            for (String string : strings) {
+                Log.d("cacheFiles", "onResume: " + string);
+            }
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (disposables != null && !disposables.isDisposed()) {
+            disposables.dispose();
+        }
     }
 }
