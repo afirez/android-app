@@ -18,8 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".gesture.GestureActivity"></activity>
-        <activity android:name=".rxjava2.Rxjava0Activity"></activity>
+        <activity android:name=".rxjava2.Rxjava0Activity" />
+        <activity android:name=".gesture.GestureActivity" />
+        <activity android:name=".gesture.ScrollerActivity"/>
     </application>
 
 </manifest>

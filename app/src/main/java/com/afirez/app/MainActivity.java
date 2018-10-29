@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.afirez.gradle.GradleActivity;
+import com.afirez.app.gesture.ScrollerActivity;
 import com.bumptech.glide.Glide;
 
 public class MainActivity extends AppCompatActivity {
@@ -108,5 +108,10 @@ public class MainActivity extends AppCompatActivity {
     public void onGradleMaven(View view) {
 //        Intent intent = new Intent(this, GradleActivity.class);
 //        startActivity(intent);
+    }
+
+    public void onScroller(View view) {
+        Intent intent = new Intent(this, ScrollerActivity.class);
+        startActivity(intent);
     }
 }

@@ -7,23 +7,34 @@
     tools:context="com.afirez.app.MainActivity">
 
     <Button
-        android:id="@+id/btn_Time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:onClick="onTime"
-        android:text="time"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/btn_gradle_maven"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="gradle maven"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_Time" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/btn_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onTime"
+        android:text="time"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_gradle_maven" />
+
+    <Button
+        android:id="@+id/btn_scroller"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onScroller"
+        android:text="scroller"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_time" />
 
     <ImageView
         android:id="@+id/iv_image"
